@@ -6,9 +6,8 @@ FROM mcr.microsoft.com/vscode/devcontainers/rust:0-1
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-RUN rustup install nightly
-RUN rustup default nightly
+# RUN rustup install nightly
+# RUN rustup default nightly
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install wasm-pack
 RUN cargo install miniserve
-# RUN cargo install rustfmt
