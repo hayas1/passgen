@@ -83,7 +83,6 @@ mod tests {
                 Password::generate(&chars.chars().collect::<Vec<_>>(), 20).unwrap().to_string(),
             );
         }
-        println!("{:?}", Password::generate(&chars.chars().collect::<Vec<_>>(), 20).unwrap());
         assert_eq!(set.len(), 10000);
     }
 
