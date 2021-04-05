@@ -8,7 +8,7 @@ pub const UPPER: &'static str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 pub const NUMERIC: &'static str = "0123456789";
 
 /// mark
-pub const DEFAULT_MARK: &'static str = ",.+-*^=!?@#%&";
+pub const DEFAULT_MARK: &'static str = "^!@#&";
 
 #[cfg(test)]
 mod tests {
