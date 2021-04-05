@@ -60,7 +60,7 @@ impl Password {
     }
 
     /// return iterator for password
-    pub fn iter(&self) -> impl IntoIterator<Item = &char> {
+    pub fn iter(&self) -> impl Iterator<Item = &char> {
         self.password.iter().take(self.len())
     }
 }
@@ -113,7 +113,7 @@ mod tests {
         let invalid = Password::generate(&['a', 'b', 'c'], 1025);
         assert!(invalid.is_err());
         assert_eq!(
-            invalid.err().unwrap().to_string(),
+            invalid.unwrap_err().to_string(),
             "max password length is 1024, but required length is 1025",
         )
     }
