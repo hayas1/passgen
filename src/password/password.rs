@@ -56,7 +56,12 @@ impl Password {
 
     /// security reason, this method is private, but this might be public
     fn to_string(&self) -> String {
-        self.password.iter().take(self.len()).collect::<String>()
+        self.password.iter().take(self.len()).collect()
+    }
+
+    /// return iterator for password
+    pub fn iter(&self) -> impl IntoIterator<Item = &char> {
+        self.password.iter().take(self.len())
     }
 }
 
