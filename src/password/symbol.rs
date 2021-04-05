@@ -1,14 +1,21 @@
+use once_cell::sync::Lazy;
+use std::collections::HashSet;
+
 /// lower case alphabet
 pub const LOWER: &'static str = "abcdefghijklmnopqrstuvwxyz";
+pub const LOWER_SET: Lazy<HashSet<char>> = Lazy::new(|| LOWER.chars().collect());
 
 /// upper case alphabet
 pub const UPPER: &'static str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+pub const UPPER_SET: Lazy<HashSet<char>> = Lazy::new(|| UPPER.chars().collect());
 
 /// numeric
 pub const NUMERIC: &'static str = "0123456789";
+pub const NUMERIC_SET: Lazy<HashSet<char>> = Lazy::new(|| NUMERIC.chars().collect());
 
 /// mark
 pub const DEFAULT_MARK: &'static str = "^!@#&";
+pub const DEFAULT_MARK_SET: Lazy<HashSet<char>> = Lazy::new(|| DEFAULT_MARK.chars().collect());
 
 #[cfg(test)]
 mod tests {
