@@ -9,6 +9,8 @@ use thiserror;
 pub enum GeneratorError {
     #[error("password should not be empty")]
     EmptyLength,
+    #[error("password should be longer than 8")]
+    TooShortLength,
     #[error("because no available symbol, cannot generate a password")]
     EmptySymbol,
 }
