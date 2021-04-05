@@ -49,6 +49,7 @@ impl Password {
         Ok(Self { len, password })
     }
 
+    #[inline]
     /// return password length
     pub fn len(&self) -> usize {
         self.len
