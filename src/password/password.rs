@@ -42,7 +42,7 @@ impl Password {
         }
         let mut csp_rng = rand::thread_rng();
         let mut password = [PASSWORD_FILL_CHARACTER; PASSWORD_MAX_LENGTH];
-        let indices = (0..len).map(|_| csp_rng.gen_range(0..chars.len()));
+        let indices = (0..len).map(|_| csp_rng.gen_range(0, chars.len())); // rand 0.7
         for (i, j) in itertools::zip(0..len, indices) {
             password[i] = chars[j];
         }
