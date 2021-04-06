@@ -79,17 +79,12 @@ impl GeneratorPane {
     }
 
     pub fn view_length_bar(&self) -> Html {
+        let oninput = self.link.callback(|d: InputData| {
+            Msg::EditLength(d.value.parse().expect("range type input should have only integer."))
+        });
         html! {
             <div>
-                <input
-                    type="range"
-                    min="10"
-                    max="100"
-                    // value="{ PasswordGenerator::PASSWORD_DEFAULT_LENGTH }"
-                    oninput=self.link.callback(|d: InputData| {
-                        Msg::EditLength(d.value.parse().expect("range type input should have only integer."))
-                    })
-                />
+                <input type="range" min="10" max="100" oninput=oninput/>
                 { self.generator.len }
             </div>
         }
@@ -99,7 +94,7 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleLower);
         html! {
             <div>
-                <label for="lower_checkbox">{"Lower Case"}</label>
+                <label for="lower_checkbox">{ "Lower Case" }</label>
                 <input id="lower_checkbox" type="checkbox" checked={ self.generator.use_lower } onclick=onclick/>
             </div>
         }
@@ -109,7 +104,7 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleUpper);
         html! {
             <div>
-                <label for="upper_checkbox">{"Upper Case"}</label>
+                <label for="upper_checkbox">{ "Upper Case" }</label>
                 <input id="upper_checkbox" type="checkbox" checked={ self.generator.use_upper } onclick=onclick/>
             </div>
         }
@@ -119,7 +114,7 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleNumeric);
         html! {
             <div>
-                <label for="numeric_checkbox">{"Numeric"}</label>
+                <label for="numeric_checkbox">{ "Numeric" }</label>
                 <input id="numeric_checkbox" type="checkbox" checked={ self.generator.use_numeric } onclick=onclick/>
             </div>
         }
