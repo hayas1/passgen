@@ -49,5 +49,5 @@ fn main() {
             .parse()
             .expect(&format!("length must be integer smaller than {}", PASSWORD_MAX_LENGTH));
     }
-    println!("{:?}", generator.generate().expect("invalid setting"));
+    println!("{:?}", generator.generate_password().expect("invalid setting"));
 }

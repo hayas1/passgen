@@ -38,10 +38,10 @@ impl PasswordGenerator {
     }
 
     /// generate password. (this method redraw until use_* is satisfied)
-    pub fn generate(&self) -> anyhow::Result<Password> {
+    pub fn generate_password(&self) -> anyhow::Result<Password> {
         self.can_generate()?;
         let password = loop {
-            let pw = Password::generate(&self.get_chars(), self.len)?;
+            let pw = Password::generate(self.len, &self.get_chars())?;
             if self.validate(&pw) {
                 break pw;
             }
@@ -106,7 +106,7 @@ mod tests {
     #[test]
     fn generator_test() {
         // password example: 7UPCItcE^#NMDKaXQHo4
-        let password = PasswordGenerator::default().generate().unwrap();
+        let password = PasswordGenerator::default().generate_password().unwrap();
         let (mut used_lower, mut used_upper, mut used_numeric, mut used_addition) =
             (false, false, false, false);
         for c in password.iter() {
@@ -129,7 +129,7 @@ mod tests {
         let generator = PasswordGenerator::default();
         let mut set = HashSet::new();
         for _ in 0..500 {
-            set.insert(format!("{:?}", generator.generate().unwrap()));
+            set.insert(format!("{:?}", generator.generate_password().unwrap()));
         }
         assert_eq!(set.len(), 500);
     }
@@ -138,15 +138,18 @@ mod tests {
     fn generate_error_test() {
         let mut generator = PasswordGenerator::default();
         generator.len = 0;
-        assert_eq!(generator.generate().unwrap_err().to_string(), "password should not be empty");
+        assert_eq!(
+            generator.generate_password().unwrap_err().to_string(),
+            "password should not be empty"
+        );
         generator.len = 7;
         assert_eq!(
-            generator.generate().unwrap_err().to_string(),
+            generator.generate_password().unwrap_err().to_string(),
             "password should be longer than 8"
         );
         generator.len = 2048;
         assert_eq!(
-            generator.generate().unwrap_err().to_string(),
+            generator.generate_password().unwrap_err().to_string(),
             "max password length is 1024, but required length is 2048"
         );
         generator.len = 8;
@@ -155,7 +158,7 @@ mod tests {
         generator.use_numeric = false;
         generator.addition.clear();
         assert_eq!(
-            generator.generate().unwrap_err().to_string(),
+            generator.generate_password().unwrap_err().to_string(),
             "because no available symbol, cannot generate a password"
         );
     }
@@ -165,7 +168,7 @@ mod tests {
         let mut generator = PasswordGenerator::default();
         generator.use_numeric = false;
         generator.addition = (0..=9).map(|i| std::char::from_digit(i, 10).unwrap()).collect();
-        let generated_password = generator.generate().unwrap();
+        let generated_password = generator.generate_password().unwrap();
         assert!(generator.validate(&generated_password));
         println!("{:?}", generated_password);
         // password example: pEamK5KhY0Ig6bB4lWZF
@@ -176,7 +179,7 @@ mod tests {
     fn generator_setting_only_a_test() {
         let generator =
             PasswordGenerator::new(20, false, false, false, vec!['a'].into_iter().collect());
-        let generated_password = generator.generate().unwrap();
+        let generated_password = generator.generate_password().unwrap();
         assert_eq!(format!("{:?}", generated_password), "aaaaaaaaaaaaaaaaaaaa");
     }
 }

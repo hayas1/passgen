@@ -36,7 +36,7 @@ impl std::fmt::Debug for Password {
 
 impl Password {
     /// generate new password, from given chars, with CSPRNG
-    pub fn generate(chars: &[char], len: usize) -> anyhow::Result<Self> {
+    pub fn generate(len: usize, chars: &[char]) -> anyhow::Result<Self> {
         if len > PASSWORD_MAX_LENGTH {
             Err(PasswordError::TooLongLength(len))?
         }
@@ -75,7 +75,7 @@ mod tests {
 
     #[test]
     fn generate_test() {
-        let a = Password::generate(&['a'], 10).unwrap();
+        let a = Password::generate(10, &['a']).unwrap();
         assert_eq!(format!("{}", a), "********");
         assert_eq!(format!("{:?}", a), "aaaaaaaaaa");
     }
@@ -86,7 +86,7 @@ mod tests {
         let mut set = HashSet::new();
         for _ in 0..10000 {
             set.insert(
-                Password::generate(&chars.chars().collect::<Vec<_>>(), 20).unwrap().to_string(),
+                Password::generate(20, &chars.chars().collect::<Vec<_>>()).unwrap().to_string(),
             );
         }
         assert_eq!(set.len(), 10000);
@@ -109,9 +109,9 @@ mod tests {
 
     #[test]
     fn too_long_password_test() {
-        let valid = Password::generate(&['a', 'b', 'c'], 1024);
+        let valid = Password::generate(1024, &['a', 'b', 'c']);
         assert!(valid.is_ok());
-        let invalid = Password::generate(&['a', 'b', 'c'], 1025);
+        let invalid = Password::generate(1025, &['a', 'b', 'c']);
         assert!(invalid.is_err());
         assert_eq!(
             invalid.unwrap_err().to_string(),
