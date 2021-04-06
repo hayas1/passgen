@@ -3,8 +3,8 @@ use passgen::password::{generator::PasswordGenerator, password::PASSWORD_MAX_LEN
 
 fn main() {
     let about = format!(
-        "This command line tool generate secure random password. \
-        By default, password is consist in lower alphabet and upper alphabet \
+        "This command line tool generate secure random password. \n\
+        By default, password consists of lower alphabet and upper alphabet \n\
         and numeric and marks such as \"{}\".",
         symbol::DEFAULT_MARK
     );
@@ -39,8 +39,8 @@ fn main() {
     if arg_matches.is_present("no_mark") {
         generator.addition.clear();
     }
-    if let Some(mark) = arg_matches.value_of("addition") {
-        for c in mark.chars() {
+    if let Some(add) = arg_matches.value_of("addition") {
+        for c in add.chars() {
             generator.addition.insert(c);
         }
     }
