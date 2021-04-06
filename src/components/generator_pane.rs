@@ -1,6 +1,6 @@
-use yew::prelude::*;
-
 use crate::password::{generator::PasswordGenerator, password::Password};
+use web_sys::console;
+use yew::prelude::*;
 
 pub struct GeneratorPane {
     link: ComponentLink<Self>,
@@ -10,6 +10,7 @@ pub struct GeneratorPane {
 
 pub enum Msg {
     Generate,
+    EditLength(usize),
 }
 
 impl Component for GeneratorPane {
@@ -24,8 +25,14 @@ impl Component for GeneratorPane {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::Generate => self.password = self.generator.generate_password().unwrap(),
+            Msg::Generate => (),
+            Msg::EditLength(len) => self.generator.len = len,
         }
+        self.password = self.generator.generate_password().unwrap();
+        console::log_2(
+            &format!("generated password: {}", self.password).into(),
+            &format!("generator setting: {:?}", self.generator).into(),
+        );
         true
     }
 
@@ -40,9 +47,39 @@ impl Component for GeneratorPane {
             <div>
                 <h1>{ "Password Generator" }</h1>
                 <div>
-                    <p>{ format!("{:?}", self.password) }</p>
-                    <button onclick=self.link.callback(|_| Msg::Generate)>{ "generate!" }</button>
+                    { self.view_generated_password() }
+                    { self.view_generate_button() }
+                    { self.view_length_bar() }
                 </div>
+            </div>
+        }
+    }
+}
+impl GeneratorPane {
+    pub fn view_generated_password(&self) -> Html {
+        html! {
+            <p>{ format!("{:?}", self.password) }</p>
+        }
+    }
+    pub fn view_generate_button(&self) -> Html {
+        html! {
+            <button onclick=self.link.callback(|_| Msg::Generate)>{ "generate!" }</button>
+        }
+    }
+
+    pub fn view_length_bar(&self) -> Html {
+        html! {
+            <div>
+                <input
+                    type="range"
+                    min="10"
+                    max="100"
+                    // value="{ PasswordGenerator::PASSWORD_DEFAULT_LENGTH }"
+                    oninput=self.link.callback(|d: InputData| {
+                        Msg::EditLength(d.value.parse().expect("range type input should have only integer."))
+                    })
+                />
+                { self.generator.len }
             </div>
         }
     }

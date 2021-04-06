@@ -5,6 +5,7 @@ use super::{password::Password, symbol, GeneratorError};
 /// default length of password is 20
 pub const PASSWORD_DEFAULT_LENGTH: usize = 20;
 
+#[derive(Debug)]
 pub struct PasswordGenerator {
     pub len: usize,
     pub use_lower: bool,
