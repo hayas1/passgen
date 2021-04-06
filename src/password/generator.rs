@@ -92,9 +92,9 @@ impl PasswordGenerator {
             used_numeric |= symbol::NUMERIC_SET.contains(c);
             used_addition |= self.addition.contains(c);
         }
-        self.use_lower == used_lower
-            && self.use_upper == used_upper
-            && self.use_numeric == used_numeric
+        !(self.use_lower && !used_lower)            // if use_lower=false, addition can include lower alphabet.
+            && !(self.use_upper && !used_upper)     // so, return true only if "use_lower=true and used_lower=false"
+            && !(self.use_numeric && !used_numeric) // the code `!(self.use_lower && !used_lower)` can work so.
             && !self.addition.is_empty() == used_addition
     }
 }
@@ -158,5 +158,25 @@ mod tests {
             generator.generate().unwrap_err().to_string(),
             "because no available symbol, cannot generate a password"
         );
+    }
+
+    #[test]
+    fn generator_setting_no_numeric_but_added_numeric_test() {
+        let mut generator = PasswordGenerator::default();
+        generator.use_numeric = false;
+        generator.addition = (0..=9).map(|i| std::char::from_digit(i, 10).unwrap()).collect();
+        let generated_password = generator.generate().unwrap();
+        assert!(generator.validate(&generated_password));
+        println!("{:?}", generated_password);
+        // password example: pEamK5KhY0Ig6bB4lWZF
+        // ^ generator.use_numeric=false, but addition include numeric, so password include numeric
+    }
+
+    #[test]
+    fn generator_setting_only_a_test() {
+        let generator =
+            PasswordGenerator::new(20, false, false, false, vec!['a'].into_iter().collect());
+        let generated_password = generator.generate().unwrap();
+        assert_eq!(format!("{:?}", generated_password), "aaaaaaaaaaaaaaaaaaaa");
     }
 }
