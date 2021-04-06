@@ -11,6 +11,9 @@ pub struct GeneratorPane {
 pub enum Msg {
     Generate,
     EditLength(usize),
+    ToggleLower,
+    ToggleUpper,
+    ToggleNumeric,
 }
 
 impl Component for GeneratorPane {
@@ -27,6 +30,9 @@ impl Component for GeneratorPane {
         match msg {
             Msg::Generate => (),
             Msg::EditLength(len) => self.generator.len = len,
+            Msg::ToggleLower => self.generator.use_lower = !self.generator.use_lower,
+            Msg::ToggleUpper => self.generator.use_upper = !self.generator.use_upper,
+            Msg::ToggleNumeric => self.generator.use_numeric = !self.generator.use_numeric,
         }
         self.password = self.generator.generate_password().unwrap();
         console::log_2(
@@ -50,17 +56,22 @@ impl Component for GeneratorPane {
                     { self.view_generated_password() }
                     { self.view_generate_button() }
                     { self.view_length_bar() }
+                    { self.view_lower_checkbox() }
+                    { self.view_upper_checkbox() }
+                    { self.view_numeric_checkbox() }
                 </div>
             </div>
         }
     }
 }
+
 impl GeneratorPane {
     pub fn view_generated_password(&self) -> Html {
         html! {
             <p>{ format!("{:?}", self.password) }</p>
         }
     }
+
     pub fn view_generate_button(&self) -> Html {
         html! {
             <button onclick=self.link.callback(|_| Msg::Generate)>{ "generate!" }</button>
@@ -80,6 +91,36 @@ impl GeneratorPane {
                     })
                 />
                 { self.generator.len }
+            </div>
+        }
+    }
+
+    pub fn view_lower_checkbox(&self) -> Html {
+        let onclick = self.link.callback(|_| Msg::ToggleLower);
+        html! {
+            <div>
+                <label for="lower_checkbox">{"Lower Case"}</label>
+                <input id="lower_checkbox" type="checkbox" checked={ self.generator.use_lower } onclick=onclick/>
+            </div>
+        }
+    }
+
+    pub fn view_upper_checkbox(&self) -> Html {
+        let onclick = self.link.callback(|_| Msg::ToggleUpper);
+        html! {
+            <div>
+                <label for="upper_checkbox">{"Upper Case"}</label>
+                <input id="upper_checkbox" type="checkbox" checked={ self.generator.use_upper } onclick=onclick/>
+            </div>
+        }
+    }
+
+    pub fn view_numeric_checkbox(&self) -> Html {
+        let onclick = self.link.callback(|_| Msg::ToggleNumeric);
+        html! {
+            <div>
+                <label for="numeric_checkbox">{"Numeric"}</label>
+                <input id="numeric_checkbox" type="checkbox" checked={ self.generator.use_numeric } onclick=onclick/>
             </div>
         }
     }
