@@ -26,9 +26,20 @@ impl Default for PasswordGenerator {
 }
 
 impl PasswordGenerator {
+    /// get new generator
+    pub fn new(
+        len: usize,
+        use_lower: bool,
+        use_upper: bool,
+        use_numeric: bool,
+        addition: HashSet<char>,
+    ) -> Self {
+        Self { len, use_lower, use_upper, use_numeric, addition }
+    }
+
     /// generate password. (this method redraw until use_* is satisfied)
     pub fn generate(&self) -> anyhow::Result<Password> {
-        self.check()?;
+        self.can_generate()?;
         let password = loop {
             let pw = Password::generate(&self.get_chars(), self.len)?;
             if self.validate(&pw) {
@@ -40,7 +51,7 @@ impl PasswordGenerator {
 
     #[inline]
     /// check generator state, which can generate password
-    pub fn check(&self) -> anyhow::Result<()> {
+    pub fn can_generate(&self) -> anyhow::Result<()> {
         if self.len == 0 {
             Err(GeneratorError::EmptyLength)?
         } else if self.len < 8 {
