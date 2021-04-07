@@ -1,4 +1,4 @@
-use crate::password::{generator::PasswordGenerator, password::Password};
+use crate::password::{generator::PasswordGenerator, password::Password, symbol};
 use web_sys::console;
 use yew::prelude::*;
 
@@ -14,6 +14,7 @@ pub enum Msg {
     ToggleLower,
     ToggleUpper,
     ToggleNumeric,
+    ToggleMark(usize),
 }
 
 impl Component for GeneratorPane {
@@ -33,6 +34,13 @@ impl Component for GeneratorPane {
             Msg::ToggleLower => self.generator.use_lower = !self.generator.use_lower,
             Msg::ToggleUpper => self.generator.use_upper = !self.generator.use_upper,
             Msg::ToggleNumeric => self.generator.use_numeric = !self.generator.use_numeric,
+            Msg::ToggleMark(idx) => {
+                if self.generator.addition.contains(&symbol::CANDIDATE_MARK_VEC[idx]) {
+                    self.generator.addition.remove(&symbol::CANDIDATE_MARK_VEC[idx]);
+                } else {
+                    self.generator.addition.insert(symbol::CANDIDATE_MARK_VEC[idx]);
+                }
+            }
         }
         self.password = self.generator.generate_password().unwrap();
         console::log_2(
@@ -59,6 +67,7 @@ impl Component for GeneratorPane {
                     { self.view_lower_checkbox() }
                     { self.view_upper_checkbox() }
                     { self.view_numeric_checkbox() }
+                    { self.view_addition_checkboxes() }
                 </div>
             </div>
         }
@@ -116,6 +125,27 @@ impl GeneratorPane {
             <div>
                 <label for="numeric_checkbox">{ "Numeric" }</label>
                 <input id="numeric_checkbox" type="checkbox" checked={ self.generator.use_numeric } onclick=onclick/>
+            </div>
+        }
+    }
+
+    pub fn view_addition_checkboxes(&self) -> Html {
+        let checkboxes = symbol::CANDIDATE_MARK.chars().enumerate().map(|(idx, c)| {
+            let checked = self.generator.addition.contains(&c);
+            let onchange = self.link.callback(move |_| Msg::ToggleMark(idx));
+            html! {
+                <li>
+                    <input id="mark_checkbox_{ idx }" type="checkbox" checked=checked onchange=onchange/>
+                    <label for="mark_checkbox_{ idx }">{ c }</label>
+                </li>
+            }
+        });
+        html! {
+            <div>
+                <p>{ "Mark" }</p>
+                <ul>
+                    { checkboxes.collect::<Html>() }
+                </ul>
             </div>
         }
     }
