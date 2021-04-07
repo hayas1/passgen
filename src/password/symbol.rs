@@ -17,6 +17,10 @@ pub const NUMERIC_SET: Lazy<HashSet<char>> = Lazy::new(|| NUMERIC.chars().collec
 pub const DEFAULT_MARK: &'static str = "^!@#&";
 pub const DEFAULT_MARK_SET: Lazy<HashSet<char>> = Lazy::new(|| DEFAULT_MARK.chars().collect());
 
+/// mark candidate
+pub const CANDIDATE_MARK: &'static str = ".,_-+=/\\^!@#&\"'$%:;><()[]{}";
+pub const CANDIDATE_MARK_VEC: Lazy<Vec<char>> = Lazy::new(|| CANDIDATE_MARK.chars().collect());
+
 #[cfg(test)]
 mod tests {
     use std::collections::HashSet;
@@ -47,5 +51,17 @@ mod tests {
             DEFAULT_MARK.chars().collect::<Vec<_>>().len(),
             DEFAULT_MARK.chars().collect::<HashSet<_>>().len()
         );
+        assert_eq!(CANDIDATE_MARK.chars().collect::<HashSet<_>>().len(), CANDIDATE_MARK_VEC.len(),)
+    }
+
+    #[test]
+    fn candidate_mark_contain_all_default_mark_test() {
+        let mut default = HashSet::new();
+        for c in CANDIDATE_MARK.chars() {
+            if DEFAULT_MARK_SET.contains(&c) {
+                default.insert(c);
+            }
+        }
+        assert_eq!(default, DEFAULT_MARK_SET.clone());
     }
 }
