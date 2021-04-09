@@ -23,8 +23,13 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.merged == true
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
     - name: Run install
-      run: cargo install --force wasm-pack
+      run: |
+        cargo install --force wasm-pack
+        npm install --global rollup
     - name: Run build
       run: |
         wasm-pack build --target web
