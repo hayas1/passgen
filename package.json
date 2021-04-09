@@ -1,0 +1,17 @@
+{
+  "name": "passgen",
+  "collaborators": [
+    "hayas1 <h4ystack@gmail.com>"
+  ],
+  "description": "simple password generator",
+  "version": "0.1.0",
+  "license": "MIT",
+  "files": [
+    "wasm_bg.wasm",
+    "wasm.js",
+    "wasm.d.ts"
+  ],
+  "module": "wasm.js",
+  "types": "wasm.d.ts",
+  "sideEffects": false
+}
