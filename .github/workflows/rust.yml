@@ -32,8 +32,10 @@ jobs:
         cargo install wasm-pack
         wasm-pack build --target web --out-name wasm --out-dir ./public
         cp ./static/* ./public/
+        /usr/bin/git status
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_dir: ./
