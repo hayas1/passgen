@@ -29,7 +29,7 @@ jobs:
       run: |
         wasm-pack build --target web --out-name wasm --out-dir ./public
         cp static/* public/
-        git add --force public
+        rm .gitignore public/.gitignore
     - uses: peaceiris/actions-gh-pages@v3
       with:
         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
