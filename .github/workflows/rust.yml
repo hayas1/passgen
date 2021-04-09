@@ -30,12 +30,11 @@ jobs:
       run: |
         rustup target add wasm32-unknown-unknown
         cargo install wasm-pack
-        wasm-pack build --target web --out-name wasm --out-dir ./public
-        cp ./static/* ./public/
-        /usr/bin/git status
+        wasm-pack build --target web --out-name wasm --out-dir ./pub
+        cp ./static/* ./pub
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        publish_dir: ./
+        publish_dir: ./pub
