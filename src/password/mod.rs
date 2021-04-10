@@ -24,11 +24,14 @@ pub enum GeneratorError {
     #[error("password should not be empty")]
     EmptyLength,
 
-    #[error("password should be longer than {}", PASSWORD_MIN_LENGTH)]
-    TooShortLength,
+    #[error("password should be longer than {}, but given is {0}", PASSWORD_MIN_LENGTH)]
+    TooShortLength(usize),
 
-    #[error("password max length is {}, for convenience such as GUI", PASSWORD_MAX_LENGTH)]
-    TooLongLength,
+    #[error(
+        "password max length is {}, for convenience such as GUI, but given is {0}",
+        PASSWORD_MAX_LENGTH
+    )]
+    TooLongLength(usize),
 
     #[error("because no available symbol, cannot generate a password")]
     EmptySymbol,
