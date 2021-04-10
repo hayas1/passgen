@@ -1,4 +1,6 @@
-use crate::password::{generator::PasswordGenerator, password::Password, symbol};
+use crate::password::{
+    generator::PasswordGenerator, password::Password, symbol, PASSWORD_MIN_LENGTH,
+};
 use web_sys::console;
 use yew::prelude::*;
 
@@ -93,7 +95,7 @@ impl GeneratorPane {
         });
         html! {
             <div>
-                <input type="range" min="10" max="100" oninput=oninput/>
+                <input type="range" min=PASSWORD_MIN_LENGTH max="100" oninput=oninput/>
                 { self.generator.len }
             </div>
         }

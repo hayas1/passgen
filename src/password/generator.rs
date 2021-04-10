@@ -1,9 +1,9 @@
 use std::collections::HashSet;
 
-use super::{password::Password, symbol, GeneratorError};
-
-/// default length of password is 20
-pub const PASSWORD_DEFAULT_LENGTH: usize = 20;
+use super::{
+    password::Password, symbol, GeneratorError, PASSWORD_DEFAULT_LENGTH, PASSWORD_MAX_LENGTH,
+    PASSWORD_MIN_LENGTH,
+};
 
 #[derive(Debug)]
 pub struct PasswordGenerator {
@@ -55,7 +55,7 @@ impl PasswordGenerator {
     pub fn can_generate(&self) -> anyhow::Result<()> {
         if self.len == 0 {
             Err(GeneratorError::EmptyLength)?
-        } else if self.len < 8 {
+        } else if self.len < PASSWORD_MIN_LENGTH {
             Err(GeneratorError::TooShortLength)?
         } else if self.get_chars().is_empty() {
             Err(GeneratorError::EmptySymbol)?

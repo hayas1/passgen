@@ -1,17 +1,11 @@
-use super::PasswordError;
+use super::{PasswordError, PASSWORD_BUFFER_SIZE, PASSWORD_FILL_CHARACTER};
 use anyhow;
 use itertools;
 use rand::Rng;
 
-/// the size of array must be known at compile time, so we have set it to 1024.
-pub const PASSWORD_MAX_LENGTH: usize = 1024;
-
-/// password is zero-filled at dropped time.
-pub const PASSWORD_FILL_CHARACTER: char = '0';
-
 pub struct Password {
     len: usize,
-    password: [char; PASSWORD_MAX_LENGTH],
+    password: [char; PASSWORD_BUFFER_SIZE],
 }
 
 impl Drop for Password {
@@ -37,11 +31,11 @@ impl std::fmt::Debug for Password {
 impl Password {
     /// generate new password, from given chars, with CSPRNG
     pub fn generate(len: usize, chars: &[char]) -> anyhow::Result<Self> {
-        if len > PASSWORD_MAX_LENGTH {
+        if len > PASSWORD_BUFFER_SIZE {
             Err(PasswordError::TooLongLength(len))?
         }
         let mut csp_rng = rand::thread_rng();
-        let mut password = [PASSWORD_FILL_CHARACTER; PASSWORD_MAX_LENGTH];
+        let mut password = [PASSWORD_FILL_CHARACTER; PASSWORD_BUFFER_SIZE];
         let indices = (0..len).map(|_| csp_rng.gen_range(0, chars.len())); // rand 0.7
         for (i, j) in itertools::zip(0..len, indices) {
             password[i] = chars[j];
