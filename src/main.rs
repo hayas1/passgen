@@ -1,5 +1,7 @@
 use clap::{App, Arg};
-use passgen::password::{generator::PasswordGenerator, symbol, PASSWORD_BUFFER_SIZE};
+use passgen::password::{
+    generator::PasswordGenerator, symbol, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
+};
 
 fn main() {
     let about = format!(
@@ -45,9 +47,10 @@ fn main() {
         }
     }
     if let Some(len) = arg_matches.value_of("length") {
-        generator.len = len
-            .parse()
-            .expect(&format!("length must be integer smaller than {}", PASSWORD_BUFFER_SIZE));
+        generator.len = len.parse().expect(&format!(
+            "length must be integer, that is in [{}, {}]",
+            PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH
+        ));
     }
     println!("{:?}", generator.generate_password().expect("invalid setting"));
 }
