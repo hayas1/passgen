@@ -41,16 +41,19 @@ fn main() {
     if arg_matches.is_present("no_mark") {
         generator.mark.clear();
     }
-    // if let Some(add) = arg_matches.value_of("addition") {
-    //     for c in add.chars() {
-    //         generator.mark.insert(c);
-    //     }
-    // }
+    if let Some(add) = arg_matches.value_of("addition") {
+        for c in add.chars() {
+            generator.addition.insert(c);
+        }
+    }
     if let Some(len) = arg_matches.value_of("length") {
         generator.len = len.parse().expect(&format!(
             "length must be integer, that is in [{}, {}]",
             PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH
         ));
     }
-    println!("{:?}", generator.generate_password().expect("invalid setting"));
+    match generator.generate_password() {
+        Ok(password) => println!("{:?}", password),
+        Err(error) => eprintln!("{:?}", &error),
+    }
 }
