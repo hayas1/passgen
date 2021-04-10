@@ -38,10 +38,10 @@ impl Component for GeneratorPane {
             Msg::ToggleUpper => self.generator.use_upper = !self.generator.use_upper,
             Msg::ToggleNumeric => self.generator.use_numeric = !self.generator.use_numeric,
             Msg::ToggleMark(idx) => {
-                if self.generator.addition.contains(&symbol::CANDIDATE_MARK_VEC[idx]) {
-                    self.generator.addition.remove(&symbol::CANDIDATE_MARK_VEC[idx]);
+                if self.generator.mark.contains(&symbol::CANDIDATE_MARK_VEC[idx]) {
+                    self.generator.mark.remove(&symbol::CANDIDATE_MARK_VEC[idx]);
                 } else {
-                    self.generator.addition.insert(symbol::CANDIDATE_MARK_VEC[idx]);
+                    self.generator.mark.insert(symbol::CANDIDATE_MARK_VEC[idx]);
                 }
             }
         }
@@ -70,7 +70,7 @@ impl Component for GeneratorPane {
                     { self.view_lower_checkbox() }
                     { self.view_upper_checkbox() }
                     { self.view_numeric_checkbox() }
-                    { self.view_addition_checkboxes() }
+                    { self.view_mark_checkboxes() }
                 </div>
             </div>
         }
@@ -132,9 +132,9 @@ impl GeneratorPane {
         }
     }
 
-    pub fn view_addition_checkboxes(&self) -> Html {
+    pub fn view_mark_checkboxes(&self) -> Html {
         let checkboxes = symbol::CANDIDATE_MARK.chars().enumerate().map(|(idx, c)| {
-            let checked = self.generator.addition.contains(&c);
+            let checked = self.generator.mark.contains(&c);
             let onchange = self.link.callback(move |_| Msg::ToggleMark(idx));
             html! {
                 <li>

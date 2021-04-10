@@ -11,7 +11,7 @@ pub struct PasswordGenerator {
     pub use_lower: bool,
     pub use_upper: bool,
     pub use_numeric: bool,
-    pub addition: HashSet<char>,
+    pub mark: HashSet<char>,
 }
 
 impl Default for PasswordGenerator {
@@ -21,7 +21,7 @@ impl Default for PasswordGenerator {
             use_lower: true,
             use_upper: true,
             use_numeric: true,
-            addition: symbol::DEFAULT_MARK_SET.clone(),
+            mark: symbol::DEFAULT_MARK_SET.clone(),
         }
     }
 }
@@ -33,9 +33,9 @@ impl PasswordGenerator {
         use_lower: bool,
         use_upper: bool,
         use_numeric: bool,
-        addition: HashSet<char>,
+        mark: HashSet<char>,
     ) -> Self {
-        Self { len, use_lower, use_upper, use_numeric, addition }
+        Self { len, use_lower, use_upper, use_numeric, mark }
     }
 
     /// generate password. (this method redraw until use_* is satisfied)
@@ -79,26 +79,26 @@ impl PasswordGenerator {
         if self.use_numeric {
             chars += symbol::NUMERIC;
         }
-        if !self.addition.is_empty() {
-            chars += &self.addition.iter().collect::<String>()
+        if !self.mark.is_empty() {
+            chars += &self.mark.iter().collect::<String>()
         }
         chars.chars().collect()
     }
 
     /// validate password, such as is numeric used when use_numeric is true
     pub fn validate(&self, password: &Password) -> bool {
-        let (mut used_lower, mut used_upper, mut used_numeric, mut used_addition) =
+        let (mut used_lower, mut used_upper, mut used_numeric, mut used_mark) =
             (false, false, false, false);
         for c in password.iter() {
             used_lower |= symbol::LOWER_SET.contains(c);
             used_upper |= symbol::UPPER_SET.contains(c);
             used_numeric |= symbol::NUMERIC_SET.contains(c);
-            used_addition |= self.addition.contains(c);
+            used_mark |= self.mark.contains(c);
         }
         !(self.use_lower && !used_lower)            // if use_lower=false, addition can include lower alphabet.
             && !(self.use_upper && !used_upper)     // so, return true only if "use_lower=true and used_lower=false"
             && !(self.use_numeric && !used_numeric) // the code `!(self.use_lower && !used_lower)` can work so.
-            && !self.addition.is_empty() == used_addition
+            && !self.mark.is_empty() == used_mark
     }
 }
 
@@ -110,13 +110,13 @@ mod tests {
     fn generator_test() {
         // password example: 7UPCItcE^#NMDKaXQHo4
         let password = PasswordGenerator::default().generate_password().unwrap();
-        let (mut used_lower, mut used_upper, mut used_numeric, mut used_addition) =
+        let (mut used_lower, mut used_upper, mut used_numeric, mut used_mark) =
             (false, false, false, false);
         for c in password.iter() {
             used_lower |= symbol::LOWER_SET.contains(c);
             used_upper |= symbol::UPPER_SET.contains(c);
             used_numeric |= symbol::NUMERIC_SET.contains(c);
-            used_addition |= symbol::DEFAULT_MARK_SET.contains(c);
+            used_mark |= symbol::DEFAULT_MARK_SET.contains(c);
             assert!(
                 symbol::LOWER_SET.contains(c)
                     || symbol::UPPER_SET.contains(c)
@@ -124,7 +124,7 @@ mod tests {
                     || symbol::DEFAULT_MARK_SET.contains(c)
             )
         }
-        assert!(used_lower && used_upper && used_numeric && used_addition);
+        assert!(used_lower && used_upper && used_numeric && used_mark);
     }
 
     #[test]
@@ -159,7 +159,7 @@ mod tests {
         generator.use_lower = false;
         generator.use_upper = false;
         generator.use_numeric = false;
-        generator.addition.clear();
+        generator.mark.clear();
         assert_eq!(
             generator.generate_password().unwrap_err().to_string(),
             "because no available symbol, cannot generate a password"
@@ -170,7 +170,7 @@ mod tests {
     fn generator_setting_no_numeric_but_added_numeric_test() {
         let mut generator = PasswordGenerator::default();
         generator.use_numeric = false;
-        generator.addition = (0..=9).map(|i| std::char::from_digit(i, 10).unwrap()).collect();
+        generator.mark = (0..=9).map(|i| std::char::from_digit(i, 10).unwrap()).collect();
         let generated_password = generator.generate_password().unwrap();
         assert!(generator.validate(&generated_password));
         println!("{:?}", generated_password);

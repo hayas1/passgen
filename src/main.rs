@@ -39,13 +39,13 @@ fn main() {
     generator.use_upper = !arg_matches.is_present("no_upper");
     generator.use_numeric = !arg_matches.is_present("no_numeric");
     if arg_matches.is_present("no_mark") {
-        generator.addition.clear();
+        generator.mark.clear();
     }
-    if let Some(add) = arg_matches.value_of("addition") {
-        for c in add.chars() {
-            generator.addition.insert(c);
-        }
-    }
+    // if let Some(add) = arg_matches.value_of("addition") {
+    //     for c in add.chars() {
+    //         generator.mark.insert(c);
+    //     }
+    // }
     if let Some(len) = arg_matches.value_of("length") {
         generator.len = len.parse().expect(&format!(
             "length must be integer, that is in [{}, {}]",
