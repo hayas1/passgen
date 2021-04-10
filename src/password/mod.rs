@@ -10,7 +10,7 @@ pub const PASSWORD_MIN_LENGTH: usize = 8;
 /// default length of password is 20
 pub const PASSWORD_DEFAULT_LENGTH: usize = 20;
 
-/// max length of password is 128 for convenience
+/// max length of password is 128 for convenience such as GUI
 pub const PASSWORD_MAX_LENGTH: usize = 128;
 
 /// the size of array must be known at compile time, so we have set it to 1024
@@ -26,6 +26,9 @@ pub enum GeneratorError {
 
     #[error("password should be longer than {}", PASSWORD_MIN_LENGTH)]
     TooShortLength,
+
+    #[error("password max length is {}, for convenience such as GUI", PASSWORD_MAX_LENGTH)]
+    TooLongLength,
 
     #[error("because no available symbol, cannot generate a password")]
     EmptySymbol,

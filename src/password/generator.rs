@@ -57,6 +57,8 @@ impl PasswordGenerator {
             Err(GeneratorError::EmptyLength)?
         } else if self.len < PASSWORD_MIN_LENGTH {
             Err(GeneratorError::TooShortLength)?
+        } else if self.len > PASSWORD_MAX_LENGTH {
+            Err(GeneratorError::TooLongLength)?
         } else if self.get_chars().is_empty() {
             Err(GeneratorError::EmptySymbol)?
         } else {
@@ -148,10 +150,10 @@ mod tests {
             generator.generate_password().unwrap_err().to_string(),
             "password should be longer than 8"
         );
-        generator.len = 2048;
+        generator.len = 129;
         assert_eq!(
             generator.generate_password().unwrap_err().to_string(),
-            "max password length is 1024, but required length is 2048"
+            "password max length is 128, for convenience such as GUI",
         );
         generator.len = 8;
         generator.use_lower = false;
