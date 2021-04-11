@@ -1,6 +1,7 @@
 use clap::{App, Arg};
 use passgen::password::{
-    generator::PasswordGenerator, symbol, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
+    generator::PasswordGenerator, symbol, PASSWORD_DEFAULT_LENGTH, PASSWORD_MAX_LENGTH,
+    PASSWORD_MIN_LENGTH,
 };
 
 fn main() {
@@ -10,10 +11,12 @@ fn main() {
         and numeric and marks such as \"{}\".",
         symbol::MarkSet::DEFAULT_MARK
     );
+    let length_help = format!("password length(default: {})", PASSWORD_DEFAULT_LENGTH);
     let app = App::new("passgen")
         .author(clap::crate_authors!())
         .version(clap::crate_version!())
         .about(&about[..])
+        .arg(Arg::with_name("length").help(&length_help[..]))
         .arg(Arg::with_name("no_lower").help("no lower character").short("l").long("lower"))
         .arg(Arg::with_name("no_upper").help("no upper character").short("u").long("upper"))
         .arg(Arg::with_name("no_numeric").help("no numeric").short("n").long("numeric"))
@@ -23,13 +26,6 @@ fn main() {
                 .help("custom addition")
                 .short("a")
                 .long("addition")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::with_name("length")
-                .help("password length(default: 20)")
-                .short("e")
-                .long("length")
                 .takes_value(true),
         );
     let arg_matches = app.get_matches();
