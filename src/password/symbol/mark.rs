@@ -1,14 +1,6 @@
 use once_cell::sync::Lazy;
 use std::collections::HashSet;
 
-/// mark
-pub const DEFAULT_MARK: &'static str = "^!@#&";
-pub const DEFAULT_MARK_SET: Lazy<HashSet<char>> = Lazy::new(|| DEFAULT_MARK.chars().collect());
-
-/// mark candidate
-pub const CANDIDATE_MARK: &'static str = ".,_-+=/\\^!?@#&\"'$%:;><()[]{}";
-pub const CANDIDATE_MARK_VEC: Lazy<Vec<char>> = Lazy::new(|| CANDIDATE_MARK.chars().collect());
-
 #[derive(Debug, Clone)]
 pub struct MarkSet {
     mark: HashSet<char>,
@@ -26,14 +18,28 @@ impl MarkSet {
     pub const CANDIDATE_MARK_SET: Lazy<HashSet<char>> =
         Lazy::new(|| Self::CANDIDATE_MARK.chars().collect());
 
+    /// return new empty MarkSet
+    pub fn new() -> Self {
+        Self { mark: HashSet::new() }
+    }
+
     /// return true if this set contains the value
     pub fn contains(&self, mark: &char) -> bool {
         self.mark.contains(mark)
     }
 
+    /// return true if this set contains nothing
+    pub fn is_empty(&self) -> bool {
+        self.mark.is_empty()
+    }
+
     /// return iterator candidate mark and is it contains this set
     pub fn get_marks(&self) -> impl Iterator<Item = (char, bool)> + '_ {
         Self::CANDIDATE_MARK.chars().map(move |c| (c, self.contains(&c)))
+    }
+
+    pub fn iter(&self) -> std::collections::hash_set::Iter<'_, char> {
+        self.mark.iter()
     }
 
     /// if mark is contained remove it, not contained and contained in candidate insert it
@@ -56,6 +62,11 @@ impl MarkSet {
     /// if mark is contained, remove it
     pub fn remove(&mut self, mark: &char) -> bool {
         self.mark.remove(mark)
+    }
+
+    /// clear contains elements
+    pub fn clear(&mut self) {
+        self.mark.clear()
     }
 }
 

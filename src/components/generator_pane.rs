@@ -1,6 +1,5 @@
 use crate::password::{
-    generator::PasswordGenerator, password::Password, symbol, PASSWORD_MAX_LENGTH,
-    PASSWORD_MIN_LENGTH,
+    generator::PasswordGenerator, password::Password, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
 };
 use web_sys::console;
 use yew::prelude::*;
@@ -17,7 +16,7 @@ pub enum Msg {
     ToggleLower,
     ToggleUpper,
     ToggleNumeric,
-    ToggleMark(usize),
+    ToggleMark(char),
 }
 
 impl Component for GeneratorPane {
@@ -37,19 +36,17 @@ impl Component for GeneratorPane {
             Msg::ToggleLower => self.generator.use_lower = !self.generator.use_lower,
             Msg::ToggleUpper => self.generator.use_upper = !self.generator.use_upper,
             Msg::ToggleNumeric => self.generator.use_numeric = !self.generator.use_numeric,
-            Msg::ToggleMark(idx) => {
-                if self.generator.mark.contains(&symbol::CANDIDATE_MARK_VEC[idx]) {
-                    self.generator.mark.remove(&symbol::CANDIDATE_MARK_VEC[idx]);
-                } else {
-                    self.generator.mark.insert(symbol::CANDIDATE_MARK_VEC[idx]);
-                }
+            Msg::ToggleMark(mark) => {
+                self.generator.mark.toggle(mark);
             }
         }
-        self.password = self.generator.generate_password().unwrap();
-        console::log_2(
-            &format!("generated password: {}", self.password).into(),
-            &format!("generator setting: {:?}", self.generator).into(),
-        );
+        match self.generator.generate_password() {
+            Ok(password) => self.password = password,
+            Err(error) => console::log_2(
+                &error.to_string().into(),
+                &format!("invalid setting: {:?}", self.generator).into(),
+            ),
+        }
         true
     }
 
@@ -106,8 +103,8 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleLower);
         html! {
             <div>
-                <label for="lower_checkbox">{ "Lower Case" }</label>
-                <input id="lower_checkbox" type="checkbox" checked={ self.generator.use_lower } onclick=onclick/>
+                <label for="lower-checkbox">{ "Lower Case" }</label>
+                <input id="lower-checkbox" type="checkbox" checked={ self.generator.use_lower } onclick=onclick/>
             </div>
         }
     }
@@ -116,8 +113,8 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleUpper);
         html! {
             <div>
-                <label for="upper_checkbox">{ "Upper Case" }</label>
-                <input id="upper_checkbox" type="checkbox" checked={ self.generator.use_upper } onclick=onclick/>
+                <label for="upper-checkbox">{ "Upper Case" }</label>
+                <input id="upper-checkbox" type="checkbox" checked={ self.generator.use_upper } onclick=onclick/>
             </div>
         }
     }
@@ -126,20 +123,20 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleNumeric);
         html! {
             <div>
-                <label for="numeric_checkbox">{ "Numeric" }</label>
-                <input id="numeric_checkbox" type="checkbox" checked={ self.generator.use_numeric } onclick=onclick/>
+                <label for="numeric-checkbox">{ "Numeric" }</label>
+                <input id="numeric-checkbox" type="checkbox" checked={ self.generator.use_numeric } onclick=onclick/>
             </div>
         }
     }
 
     pub fn view_mark_checkboxes(&self) -> Html {
-        let checkboxes = symbol::CANDIDATE_MARK.chars().enumerate().map(|(idx, c)| {
-            let checked = self.generator.mark.contains(&c);
-            let onchange = self.link.callback(move |_| Msg::ToggleMark(idx));
+        let checkboxes = self.generator.mark.get_marks().map(|(c, checked)| {
+            let onchange = self.link.callback(move |_| Msg::ToggleMark(c));
+            let id = format!("mark{}-checkbox", c as u32);
             html! {
                 <li>
-                    <input id="mark_checkbox_{ idx }" type="checkbox" checked=checked onchange=onchange/>
-                    <label for="mark_checkbox_{ idx }">{ c }</label>
+                    <input id=id type="checkbox" checked=checked onchange=onchange/>
+                    <label for=id>{ c }</label>
                 </li>
             }
         });

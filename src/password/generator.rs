@@ -1,8 +1,9 @@
 use std::collections::HashSet;
 
 use super::{
-    password::Password, symbol, GeneratorError, PASSWORD_DEFAULT_LENGTH, PASSWORD_MAX_LENGTH,
-    PASSWORD_MIN_LENGTH,
+    password::Password,
+    symbol::{self, MarkSet},
+    GeneratorError, PASSWORD_DEFAULT_LENGTH, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
 };
 
 #[derive(Debug)]
@@ -11,7 +12,7 @@ pub struct PasswordGenerator {
     pub use_lower: bool,
     pub use_upper: bool,
     pub use_numeric: bool,
-    pub mark: HashSet<char>,
+    pub mark: MarkSet,
     pub addition: HashSet<char>,
 }
 
@@ -22,7 +23,7 @@ impl Default for PasswordGenerator {
             use_lower: true,
             use_upper: true,
             use_numeric: true,
-            mark: symbol::DEFAULT_MARK_SET.clone(),
+            mark: symbol::MarkSet::default(),
             addition: HashSet::new(),
         }
     }
@@ -35,7 +36,7 @@ impl PasswordGenerator {
         use_lower: bool,
         use_upper: bool,
         use_numeric: bool,
-        mark: HashSet<char>,
+        mark: MarkSet,
         addition: HashSet<char>,
     ) -> Self {
         Self { len, use_lower, use_upper, use_numeric, mark, addition }
@@ -124,12 +125,12 @@ mod tests {
             used_lower |= symbol::LOWER_SET.contains(c);
             used_upper |= symbol::UPPER_SET.contains(c);
             used_numeric |= symbol::NUMERIC_SET.contains(c);
-            used_mark |= symbol::DEFAULT_MARK_SET.contains(c);
+            used_mark |= symbol::MarkSet::DEFAULT_MARK_SET.contains(c);
             assert!(
                 symbol::LOWER_SET.contains(c)
                     || symbol::UPPER_SET.contains(c)
                     || symbol::NUMERIC_SET.contains(c)
-                    || symbol::DEFAULT_MARK_SET.contains(c)
+                    || symbol::MarkSet::DEFAULT_MARK_SET.contains(c)
             )
         }
         assert!(used_lower && used_upper && used_numeric && used_mark);
@@ -223,7 +224,7 @@ mod tests {
             false,
             false,
             false,
-            HashSet::new(),
+            MarkSet::new(),
             vec!['a'].into_iter().collect(),
         );
         let generated_password = generator.generate_password().unwrap();

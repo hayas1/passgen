@@ -8,7 +8,7 @@ fn main() {
         "This command line tool generate secure random password. \n\
         By default, password consists of lower alphabet and upper alphabet \n\
         and numeric and marks such as \"{}\".",
-        symbol::DEFAULT_MARK
+        symbol::MarkSet::DEFAULT_MARK
     );
     let app = App::new("passgen")
         .author(clap::crate_authors!())
