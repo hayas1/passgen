@@ -4,14 +4,19 @@
     "hayas1 <h4ystack@gmail.com>"
   ],
   "description": "simple password generator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hayas1/passgen"
+  },
   "files": [
     "wasm_bg.wasm",
     "wasm.js",
     "wasm.d.ts"
   ],
   "module": "wasm.js",
+  "homepage": "https://hayas1.github.io/passgen/",
   "types": "wasm.d.ts",
   "sideEffects": false
 }
