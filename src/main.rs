@@ -48,8 +48,14 @@ fn main() {
             PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH
         ));
     }
-    match generator.generate_password() {
-        Ok(password) => println!("{:?}", password),
-        Err(error) => eprintln!("{:?}", &error),
-    }
+    std::process::exit(match generator.generate_password() {
+        Ok(password) => {
+            println!("{:?}", password);
+            0
+        }
+        Err(error) => {
+            eprintln!("{:?}", &error);
+            1
+        }
+    });
 }
