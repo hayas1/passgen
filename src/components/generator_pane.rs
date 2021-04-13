@@ -1,7 +1,7 @@
 use crate::password::{
     generator::PasswordGenerator, password::Password, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
 };
-use web_sys::console;
+use web_sys;
 use yew::prelude::*;
 use yew_styles::{
     button::Button,
@@ -26,7 +26,7 @@ pub enum Msg {
 impl Component for GeneratorPane {
     type Message = Msg;
     type Properties = ();
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let generator = PasswordGenerator::default();
         let password =
             generator.generate_password().expect("default generator should generate password.");
@@ -46,7 +46,7 @@ impl Component for GeneratorPane {
         }
         match self.generator.generate_password() {
             Ok(password) => self.password = password,
-            Err(error) => console::log_2(
+            Err(error) => web_sys::console::log_2(
                 &error.to_string().into(),
                 &format!("invalid setting: {:?}", self.generator).into(),
             ),
