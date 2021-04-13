@@ -2,9 +2,12 @@
 authors = ["hayas1 <h4ystack@gmail.com>"]
 description = "simple password generator"
 edition = "2018"
-license = "MIT"
 name = "passgen"
-version = "0.1.0"
+version = "0.2.0"
+repository = "https://github.com/hayas1/passgen"
+homepage = "https://hayas1.github.io/passgen/"
+license = "MIT"
+readme = "./README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
