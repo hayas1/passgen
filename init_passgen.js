@@ -1,2 +1,2 @@
-import init from "./wasm.js"
-init()
+import init from "./wasm.js";
+init();
