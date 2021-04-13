@@ -1,9 +1,9 @@
 use wasm_bindgen::prelude::wasm_bindgen;
-use yew::app::App;
+use yew::prelude::*;
 
-use crate::components::generator_pane::GeneratorPane;
+use super::components::app::PassGenApp;
 
 #[wasm_bindgen(start)]
 pub fn run_app() {
-    App::<GeneratorPane>::new().mount_to_body();
+    App::<PassGenApp>::new().mount_to_body();
 }
