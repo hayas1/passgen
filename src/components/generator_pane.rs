@@ -3,6 +3,10 @@ use crate::password::{
 };
 use web_sys::console;
 use yew::prelude::*;
+use yew_styles::{
+    button::Button,
+    styles::{Palette, Size, Style},
+};
 
 pub struct GeneratorPane {
     link: ComponentLink<Self>,
@@ -82,8 +86,23 @@ impl GeneratorPane {
     }
 
     pub fn view_generate_button(&self) -> Html {
+        let palette = match self.generator.can_generate() {
+            Ok(()) => Palette::Success,
+            Err(_) => Palette::Warning,
+        };
         html! {
-            <button onclick=self.link.callback(|_| Msg::Generate)>{ "generate!" }</button>
+            <Button
+                id="generate-button"
+                onclick_signal=self.link.callback(move |_| Msg::Generate)
+                button_palette=palette
+                button_style=Style::Light
+                button_size=Size::Small
+            >{
+                match self.generator.can_generate() {
+                    Ok(()) => "Generate!",
+                    Err(_) => "Unavailable!",
+                }
+            }</Button>
         }
     }
 
