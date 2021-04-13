@@ -2,12 +2,15 @@
 
 FROM mcr.microsoft.com/vscode/devcontainers/rust:0-1
 
-# [Optional] Uncomment this section to install additional packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# use npm not apt-get but n package
+# RUN apt-get update
+# RUN apt-get -y install --no-install-recommends nodejs npm
+# RUN npm install n -g && n stable
+# RUN apt-get purge -y nodejs npm
 
-# RUN rustup install nightly
-# RUN rustup default nightly
-RUN rustup target add wasm32-unknown-unknown
-RUN cargo install wasm-pack
-RUN cargo install miniserve
+
+# RUN rustup install nightly \
+#     && rustup default nightly
+RUN rustup target add wasm32-unknown-unknown \
+    && cargo install wasm-pack \
+    && cargo install miniserve

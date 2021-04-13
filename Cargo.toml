@@ -24,3 +24,5 @@ thiserror = "1.0"
 once_cell = "1.7"
 clap = "2.33"
 web-sys = "0.3"
+yew_styles = { version="0.9", features=["layouts", "button", "navbar", "forms", "card",
+                                        "modal", "text", "dropdown", "spinner", "carousel"] }
