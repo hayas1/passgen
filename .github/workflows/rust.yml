@@ -23,10 +23,10 @@ jobs:
     if: github.event_name == 'push'
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 14 # ${{ matrix.node-version }}
+    - name: Use Node.js 14.x # ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
-        node-version: 14.x
+        node-version: 14.x # ${{ matrix.node-version }}
     - name: Run install
       run: |
         cargo install --force wasm-pack
