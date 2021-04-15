@@ -2,10 +2,7 @@ use super::ESCAPE_KEY;
 use yew::prelude::*;
 use yew_styles::{
     button::Button,
-    layouts::{
-        container::{Container, Direction, JustifyContent, Mode, Wrap},
-        item::{AlignSelf, Item, ItemLayout},
-    },
+    layouts::container::{JustifyContent, Mode},
     modal::Modal,
     navbar::{
         navbar_component::{Fixed, Navbar},
@@ -109,7 +106,7 @@ impl Header {
                 <Modal
                     modal_size=Size::Big
                     header=html!{
-                        <b>{"About this page"}</b>
+                        <b>{"About this application"}</b>
                     }
                     header_palette=Palette::Link
                     body=self.view_modal_body()
@@ -124,48 +121,26 @@ impl Header {
     }
 
     pub fn view_modal_body(&self) -> Html {
-        let layouts =
-            vec![ItemLayout::ItXl(9), ItemLayout::ItL(9), ItemLayout::ItM(6), ItemLayout::ItXs(12)];
         html! {
             <div>
-                <h1>{ "passgen" }</h1>
-                <p>{ "simple password generator implemented by rust and compiled into wasm." }</p>
-                <Container direction=Direction::Row wrap=Wrap::Wrap class_name="align-item">
-                    <Item layouts=layouts.clone() align_self=AlignSelf::FlexStart>
-                        <h2>{ "Available" }</h2>
-                        <Container direction=Direction::Column wrap=Wrap::Wrap class_name="align-item">
-                            <Item layouts=layouts.clone() align_self=AlignSelf::FlexStart>
-                                <input id="checkbox-length" type="checkbox" disabled=true checked=true />
-                                <label for="checkbox-length">{ "password length from 8 to 128" }</label>
-                            </Item>
-                            <Item layouts=layouts.clone() align_self=AlignSelf::FlexStart>
-                                <input id="checkbox-lower" type="checkbox" disabled=true checked=true />
-                                <label for="checkbox-lower">{ "use lower case" }</label>
-                            </Item>
-                            <Item layouts=layouts.clone() align_self=AlignSelf::FlexStart>
-                                <input id="checkbox-upper" type="checkbox" disabled=true checked=true />
-                                <label for="checkbox-upper">{ "use upper case" }</label>
-                            </Item>
-                            <Item layouts=layouts.clone() align_self=AlignSelf::FlexStart>
-                                <input id="checkbox-numeric" type="checkbox" disabled=true checked=true />
-                                <label for="checkbox-numeric">{ "use numeric" }</label>
-                            </Item>
-                            <Item layouts=layouts.clone() align_self=AlignSelf::FlexStart>
-                                <input id="checkbox-mark-symbol" type="checkbox" disabled=true checked=true />
-                                <label for="checkbox-mark-symbol">{ "use some mark symbols" }</label>
-                            </Item>
-                            <Item layouts=layouts.clone() align_self=AlignSelf::FlexStart>
-                                <input id="checkbox-custom-characters" type="checkbox" disabled=true />
-                                <label for="checkbox-custom-characters">{ "use custom characters" }</label>
-                            </Item>
-                        </Container>
-                    </Item>
-                    <Item layouts=layouts.clone() align_self=AlignSelf::FlexEnd>
-                        <h2>{ "Feature" }</h2>
-                        <p>{ "Since this is implemented by Rust, it can be compiled into WebAssembly and served as a web application." }</p>
-                        <p>{ "Yew is used for the framework. And Yew Styles is used for style." }</p>
-                    </Item>
-                </Container>
+                <h3>{ "What" }</h3>
+                <p>
+                    { "This page can generate a random and maybe secure password. " }
+                    { "But if you use this password, you may use clipboard, so be careful about security." }
+                </p>
+                <h3>{ "How" }</h3>
+                <p>
+                    { "Generator is implemented by " }
+                    <a href="https://www.rust-lang.org/">{ "Rust" }</a>
+                    { " so compiled into " }
+                    <a href="https://webassembly.org/">{ "Wasm" }</a>
+                    { ". " }
+                    { "Used framework is " }
+                    <a href="https://yew.rs/docs/">{ "Yew" }</a>
+                    { " and use " }
+                    <a href="https://yewstyles.spielrs.tech/">{ "Yew Styles" }</a>
+                    { " for style." }
+                </p>
                 <hr/>
                 <Button
                     button_palette=Palette::Info
