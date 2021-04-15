@@ -1,7 +1,6 @@
 use crate::password::{
     generator::PasswordGenerator, password::Password, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
 };
-use web_sys;
 use yew::prelude::*;
 use yew_styles::{
     button::Button,
