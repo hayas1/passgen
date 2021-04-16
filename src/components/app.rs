@@ -22,8 +22,12 @@ impl Component for PassGenApp {
     fn view(&self) -> Html {
         html! {
             <>
-                <Header />
-                <GeneratorPane />
+                <header>
+                    <Header />
+                </header>
+                <main>
+                    <GeneratorPane />
+                </main>
             </>
         }
     }

@@ -10,6 +10,7 @@ use yew_styles::{
         navbar_item::NavbarItem,
     },
     styles::{Palette, Size, Style},
+    text::{Text, TextType},
 };
 
 pub struct Header {
@@ -52,26 +53,24 @@ impl Component for Header {
 
     fn view(&self) -> Html {
         html! {
-            <header>
-                <Navbar
-                    navbar_palette=Palette::Info
-                    navbar_style=Style::Light
-                    fixed=Fixed::None
-                    branch=html!{ "logo" }>
-                    <NavbarContainer justify_content=JustifyContent::FlexStart(Mode::NoMode)>
-                        <NavbarItem active=true>
-                            <span>{ "Home" }</span>
-                        </NavbarItem>
-                        <NavbarItem onclick_signal=self.link.callback(|_| Msg::Repository)>
-                            <span>{ "Repository" }</span>
-                        </NavbarItem>
-                        <NavbarItem onclick_signal=self.link.callback(|_| Msg::OpenModal)>
-                            <span>{ "About" }</span>
-                        </NavbarItem>
-                    </NavbarContainer>
-                </Navbar>
+            <Navbar
+                navbar_palette=Palette::Info
+                navbar_style=Style::Light
+                fixed=Fixed::None
+                branch=html!{ "logo" }>
+                <NavbarContainer justify_content=JustifyContent::FlexStart(Mode::NoMode)>
+                    <NavbarItem active=true>
+                        <span>{ "Home" }</span>
+                    </NavbarItem>
+                    <NavbarItem onclick_signal=self.link.callback(|_| Msg::Repository)>
+                        <span>{ "Repository" }</span>
+                    </NavbarItem>
+                    <NavbarItem onclick_signal=self.link.callback(|_| Msg::OpenModal)>
+                        <span>{ "About" }</span>
+                    </NavbarItem>
+                </NavbarContainer>
                 { self.view_modal() }
-            </header>
+            </Navbar>
         }
     }
 }
@@ -124,24 +123,36 @@ impl Header {
         html! {
             <div>
                 <h3>{ "What" }</h3>
-                <p>
-                    { "This page can generate a random and maybe secure password. " }
-                    { "But if you use this password, you may use clipboard, so be careful about security." }
-                </p>
+                <Text
+                    text_type=TextType::Paragraph
+                    text_size=Size::Medium
+                    html_text=Some(html!{
+                        <div>
+                            { "This page can generate a random and maybe secure password. " }
+                            { "But if you use this password, you may use clipboard, so be careful about security." }
+                        </div>
+                    })
+                />
                 <h3>{ "How" }</h3>
-                <p>
-                    { "Generator is implemented by " }
-                    <a href="https://www.rust-lang.org/">{ "Rust" }</a>
-                    { " so compiled into " }
-                    <a href="https://webassembly.org/">{ "Wasm" }</a>
-                    { ". " }
-                    { "Used framework is " }
-                    <a href="https://yew.rs/docs/">{ "Yew" }</a>
-                    { " and use " }
-                    <a href="https://yewstyles.spielrs.tech/">{ "Yew Styles" }</a>
-                    { " for style." }
-                </p>
-                <hr/>
+                    <Text
+                        text_type=TextType::Paragraph
+                        text_size=Size::Medium
+                        html_text=Some(html!{
+                            <div>
+                                { "Generator is implemented by " }
+                                <a href="https://www.rust-lang.org/">{ "Rust" }</a>
+                                { " so compiled into " }
+                                <a href="https://webassembly.org/">{ "Wasm" }</a>
+                                { ". " }
+                                { "Used framework is " }
+                                <a href="https://yew.rs/docs/">{ "Yew" }</a>
+                                { " and use " }
+                                <a href="https://yewstyles.spielrs.tech/">{ "Yew Styles" }</a>
+                                { " for style." }
+                            </div>
+                        })
+                    />
+            <hr/>
                 <Button
                     button_palette=Palette::Info
                     onclick_signal=self.link.callback(|_| Msg::CloseModal)
