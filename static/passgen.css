@@ -1,0 +1,24 @@
+.generated-password {
+    overflow-wrap:break-word;
+    width: 100%;
+}
+
+#password-display {
+    text-align: center;
+}
+
+.addition {
+    color: firebrick;
+}
+.lower {
+    color: aliceblue;
+}
+.upper {
+    color: palegreen;
+}
+.numeric {
+    color:yellow;
+}
+.mark {
+    color: aqua;
+}

@@ -4,6 +4,11 @@ use crate::password::{
 use yew::prelude::*;
 use yew_styles::{
     button::Button,
+    card::Card,
+    layouts::{
+        container::{Container, Direction, Wrap},
+        item::{AlignSelf, Item, ItemLayout},
+    },
     styles::{Palette, Size, Style},
 };
 
@@ -54,33 +59,64 @@ impl Component for GeneratorPane {
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        // Should only return "true" if new properties are different to previously received properties.
-        // This component has no properties so we will always return "false".
         false
     }
 
     fn view(&self) -> Html {
         html! {
-            <div>
-                <h1>{ "Password Generator" }</h1>
-                <div>
-                    { self.view_generated_password() }
-                    { self.view_generate_button() }
-                    { self.view_length_bar() }
-                    { self.view_lower_checkbox() }
-                    { self.view_upper_checkbox() }
-                    { self.view_numeric_checkbox() }
-                    { self.view_mark_checkboxes() }
-                </div>
-            </div>
+            { self.view_main_card_body() }
         }
     }
 }
 
 impl GeneratorPane {
+    pub fn view_main_card_body(&self) -> Html {
+        html! {
+            <Container direction=Direction::Column wrap=Wrap::Wrap>
+                <Item class_name="generated-password" layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
+                    { self.view_generated_password() }
+                </Item>
+                <Item layouts=vec![ItemLayout::ItL(12)] align_self=AlignSelf::FlexStart>
+                    <Container direction=Direction::Row wrap=Wrap::Nowrap>
+                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexStart>
+                            { self.view_length_bar() }
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexEnd>
+                            { self.view_generate_button() }
+                        </Item>
+                    </Container>
+                    <Container direction=Direction::Row wrap=Wrap::Nowrap>
+                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexStart>
+                            { self.view_lower_checkbox() }
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
+                            { self.view_upper_checkbox() }
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexEnd>
+                            { self.view_numeric_checkbox() }
+                        </Item>
+                    </Container>
+                </Item>
+                <Item layouts=vec![ItemLayout::ItL(12)] align_self=AlignSelf::FlexStart>
+                    { self.view_mark_checkboxes() }
+                </Item>
+            </Container>
+        }
+    }
+
     pub fn view_generated_password(&self) -> Html {
         html! {
-            <p>{ format!("{:?}", self.password) }</p>
+            <Card
+                card_size=Size::Medium
+                card_palette=Palette::Link
+                card_style=Style::Light
+                header=Some(html!{
+                    <b>{ "Generated Password" }</b>
+                })
+                body=Some(html!{
+                    <p id="password-display">{self.generator.to_html(&self.password)}</p>
+                })
+            />
         }
     }
 
