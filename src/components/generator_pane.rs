@@ -53,14 +53,7 @@ impl Component for GeneratorPane {
                 return false; // do not refresh password
             }
         }
-        match self.generator.generate_password() {
-            Ok(password) => self.password = password,
-            Err(error) => web_sys::console::log_2(
-                &error.to_string().into(),
-                &format!("invalid setting: {:?}", self.generator).into(),
-            ),
-        }
-        true
+        self.refresh_password()
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
@@ -75,6 +68,17 @@ impl Component for GeneratorPane {
 }
 
 impl GeneratorPane {
+    pub fn refresh_password(&mut self) -> ShouldRender {
+        match self.generator.generate_password() {
+            Ok(password) => self.password = password,
+            Err(error) => web_sys::console::log_2(
+                &error.to_string().into(),
+                &format!("invalid setting: {:?}", self.generator).into(),
+            ),
+        }
+        true
+    }
+
     pub fn copy_password_to_clipboard(&self) {
         // TODO: error handling
         let password = self.password.to_string(); // this may have subtle security warning
