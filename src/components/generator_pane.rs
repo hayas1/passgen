@@ -25,6 +25,7 @@ pub enum Msg {
     ToggleUpper,
     ToggleNumeric,
     ToggleMark(char),
+    CopyPassword,
 }
 
 impl Component for GeneratorPane {
@@ -46,6 +47,10 @@ impl Component for GeneratorPane {
             Msg::ToggleNumeric => self.generator.use_numeric = !self.generator.use_numeric,
             Msg::ToggleMark(mark) => {
                 self.generator.mark.toggle(mark);
+            }
+            Msg::CopyPassword => {
+                self.copy_password_to_clipboard();
+                return false; // do not refresh password
             }
         }
         match self.generator.generate_password() {
@@ -70,6 +75,16 @@ impl Component for GeneratorPane {
 }
 
 impl GeneratorPane {
+    pub fn copy_password_to_clipboard(&self) {
+        // TODO: error handling
+        let password = self.password.to_string(); // this may have subtle security warning
+        let task = async move {
+            let promise = yew::utils::window().navigator().clipboard().write_text(&password);
+            let _result = wasm_bindgen_futures::JsFuture::from(promise).await;
+        };
+        wasm_bindgen_futures::spawn_local(task);
+    }
+
     pub fn view_main_card_body(&self) -> Html {
         html! {
             <Container direction=Direction::Column wrap=Wrap::Wrap>
@@ -106,17 +121,20 @@ impl GeneratorPane {
 
     pub fn view_generated_password(&self) -> Html {
         html! {
-            <Card
-                card_size=Size::Medium
-                card_palette=Palette::Link
-                card_style=Style::Light
-                header=Some(html!{
-                    <b>{ "Generated Password" }</b>
-                })
-                body=Some(html!{
-                    <p id="password-display">{self.generator.to_html(&self.password)}</p>
-                })
-            />
+            <div title="Click to copy password">
+                <Card
+                    card_size=Size::Medium
+                    card_palette=Palette::Link
+                    card_style=Style::Light
+                    onclick_signal=self.link.callback(|_| Msg::CopyPassword)
+                    header=Some(html!{
+                        <b>{ "Generated Password" }</b>
+                    })
+                    body=Some(html!{
+                        <p id="password-display">{self.generator.to_html(&self.password)}</p>
+                    })
+                />
+            </div>
         }
     }
 
@@ -128,7 +146,7 @@ impl GeneratorPane {
         html! {
             <Button
                 id="generate-button"
-                onclick_signal=self.link.callback(move |_| Msg::Generate)
+                onclick_signal=self.link.callback(|_| Msg::Generate)
                 button_palette=palette
                 button_style=Style::Light
                 button_size=Size::Small
