@@ -5,6 +5,14 @@ use yew::prelude::*;
 use yew_styles::{
     button::Button,
     card::Card,
+    forms::{
+        form_file::FormFile,
+        form_group::{FormGroup, Orientation},
+        form_input::{FormInput, InputType},
+        form_label::FormLabel,
+        form_select::FormSelect,
+        form_textarea::FormTextArea,
+    },
     layouts::{
         container::{Container, Direction, Wrap},
         item::{AlignSelf, Item, ItemLayout},
@@ -61,9 +69,7 @@ impl Component for GeneratorPane {
     }
 
     fn view(&self) -> Html {
-        html! {
-            { self.view_main_card_body() }
-        }
+        self.view_main()
     }
 }
 
@@ -89,33 +95,30 @@ impl GeneratorPane {
         wasm_bindgen_futures::spawn_local(task);
     }
 
-    pub fn view_main_card_body(&self) -> Html {
+    pub fn view_main(&self) -> Html {
         html! {
             <Container direction=Direction::Column wrap=Wrap::Wrap>
                 <Item class_name="generated-password" layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
                     { self.view_generated_password() }
                 </Item>
-                <Item layouts=vec![ItemLayout::ItL(12)] align_self=AlignSelf::FlexStart>
-                    <Container direction=Direction::Row wrap=Wrap::Nowrap>
-                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexStart>
-                            { self.view_length_bar() }
-                        </Item>
-                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexEnd>
-                            { self.view_generate_button() }
-                        </Item>
-                    </Container>
-                    <Container direction=Direction::Row wrap=Wrap::Nowrap>
-                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexStart>
-                            { self.view_lower_checkbox() }
-                        </Item>
-                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
-                            { self.view_upper_checkbox() }
-                        </Item>
-                        <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexEnd>
-                            { self.view_numeric_checkbox() }
-                        </Item>
-                    </Container>
-                </Item>
+                <Container direction=Direction::Row wrap=Wrap::Wrap>
+                    <Item layouts=vec![ItemLayout::ItL(6)] align_self=AlignSelf::Center>
+                        { self.view_length_bar_button_pane() }
+                    </Item>
+                    <Item layouts=vec![ItemLayout::ItL(6)] align_self=AlignSelf::Center>
+                        <Container direction=Direction::Row wrap=Wrap::Nowrap>
+                            <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexStart>
+                                { self.view_lower_checkbox() }
+                            </Item>
+                            <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
+                                { self.view_upper_checkbox() }
+                            </Item>
+                            <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexEnd>
+                                { self.view_numeric_checkbox() }
+                            </Item>
+                        </Container>
+                    </Item>
+                </Container>
                 <Item layouts=vec![ItemLayout::ItL(12)] align_self=AlignSelf::FlexStart>
                     { self.view_mark_checkboxes() }
                 </Item>
@@ -125,7 +128,7 @@ impl GeneratorPane {
 
     pub fn view_generated_password(&self) -> Html {
         html! {
-            <div title="Click to copy password">
+            <div title="Click to copy password!">
                 <Card
                     card_size=Size::Medium
                     card_palette=Palette::Link
@@ -142,24 +145,27 @@ impl GeneratorPane {
         }
     }
 
-    pub fn view_generate_button(&self) -> Html {
-        let palette = match self.generator.can_generate() {
-            Ok(()) => Palette::Success,
-            Err(_) => Palette::Warning,
-        };
+    pub fn view_length_bar_button_pane(&self) -> Html {
         html! {
-            <Button
-                id="generate-button"
-                onclick_signal=self.link.callback(|_| Msg::Generate)
-                button_palette=palette
-                button_style=Style::Light
-                button_size=Size::Small
-            >{
-                match self.generator.can_generate() {
-                    Ok(()) => "Generate!",
-                    Err(_) => "Unavailable!",
-                }
-            }</Button>
+            <Card
+                card_size=Size::Small
+                card_palette=Palette::Primary
+                card_style=Style::Light
+                interaction_effect=false
+                header=Some(html!{
+                    <p>{ "Setting" }</p>
+                })
+                body=Some(html!{
+                    <Container direction=Direction::Row wrap=Wrap::Nowrap>
+                        <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                            { self.view_length_bar() }
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                            { self.view_generate_button() }
+                        </Item>
+                    </Container>
+                })
+            />
         }
     }
 
@@ -168,10 +174,44 @@ impl GeneratorPane {
             Msg::EditLength(d.value.parse().expect("range type input should have only integer."))
         });
         html! {
-            <div>
-                <input type="range" min=PASSWORD_MIN_LENGTH max=PASSWORD_MAX_LENGTH oninput=oninput/>
-                { self.generator.len }
-            </div>
+            <FormGroup orientation=Orientation::Horizontal>
+                <FormInput
+                    id="password-length"
+                    input_type=InputType::Range
+                    input_size=Size::Big
+                    min=PASSWORD_MIN_LENGTH as u16
+                    max=PASSWORD_MAX_LENGTH as u16
+                    oninput_signal=oninput
+                    // value=PASSWORD_DEFAULT_LENGTH  // Yew Styles do not allow `value` attribute
+                />
+                <FormLabel
+                  text=self.generator.len.to_string()
+                  label_for="password-length"
+                />
+            </FormGroup>
+        }
+    }
+
+    pub fn view_generate_button(&self) -> Html {
+        match self.generator.can_generate() {
+            Ok(()) => html! {
+                <Button
+                    id="generate-button"
+                    onclick_signal=self.link.callback(|_| Msg::Generate)
+                    button_palette=Palette::Success
+                    button_style=Style::Light
+                    button_size=Size::Small
+                >{ "Generate!" }</Button>
+            },
+            Err(_) => html! {
+                <Button
+                    id="generate-button"
+                    onclick_signal=self.link.callback(|_| Msg::Generate)
+                    button_palette=Palette::Warning
+                    button_style=Style::Light
+                    button_size=Size::Small
+                >{ "Unavailable!" }</Button>
+            },
         }
     }
 
