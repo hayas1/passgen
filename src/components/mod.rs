@@ -26,7 +26,7 @@ impl PasswordGenerator {
                 } else if !self.mark.is_empty() && self.mark.contains(c) {
                     "mark"
                 } else {
-                    unreachable!()
+                    "addition" // any other character display as addition symbol
                 };
                 html! {
                     <span class=class>{ c }</span>
