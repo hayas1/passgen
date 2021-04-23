@@ -1,4 +1,4 @@
-.generated-password {
+.stretch-card {
     overflow-wrap:break-word;
     width: 100%;
 }
@@ -17,7 +17,7 @@
     color: palegreen;
 }
 .numeric {
-    color:yellow;
+    color: yellow;
 }
 .mark {
     color: aqua;

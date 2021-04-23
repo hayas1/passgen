@@ -1,6 +1,5 @@
-use crate::password::{
-    generator::PasswordGenerator, password::Password, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH,
-};
+use super::{LOWER_CLASS, NUMERIC_CLASS, UPPER_CLASS};
+use crate::password::{Password, PasswordGenerator, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH};
 use yew::prelude::*;
 use yew_styles::{
     button::Button,
@@ -14,7 +13,7 @@ use yew_styles::{
         form_textarea::FormTextArea,
     },
     layouts::{
-        container::{Container, Direction, Wrap},
+        container::{Container, Direction, JustifyContent, Mode, Wrap},
         item::{AlignSelf, Item, ItemLayout},
     },
     styles::{Palette, Size, Style},
@@ -97,29 +96,19 @@ impl GeneratorPane {
 
     pub fn view_main(&self) -> Html {
         html! {
-            <Container direction=Direction::Column wrap=Wrap::Wrap>
-                <Item class_name="generated-password" layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
+            <Container direction=Direction::Column wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode)>
+                <Item class_name="stretch-card" layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
                     { self.view_generated_password() }
                 </Item>
-                <Container direction=Direction::Row wrap=Wrap::Wrap>
-                    <Item layouts=vec![ItemLayout::ItL(6)] align_self=AlignSelf::Center>
+                <Container direction=Direction::Row wrap=Wrap::Nowrap>
+                    <Item layouts=vec![ItemLayout::ItL(8)] align_self=AlignSelf::FlexStart>
                         { self.view_length_bar_button_pane() }
                     </Item>
-                    <Item layouts=vec![ItemLayout::ItL(6)] align_self=AlignSelf::Center>
-                        <Container direction=Direction::Row wrap=Wrap::Nowrap>
-                            <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexStart>
-                                { self.view_lower_checkbox() }
-                            </Item>
-                            <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
-                                { self.view_upper_checkbox() }
-                            </Item>
-                            <Item layouts=vec![ItemLayout::ItL(4), ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::FlexEnd>
-                                { self.view_numeric_checkbox() }
-                            </Item>
-                        </Container>
+                    <Item class_name="stretch-card"  layouts=vec![ItemLayout::ItL(4)] align_self=AlignSelf::FlexEnd>
+                        { self.view_character_checkboxes_pane() }
                     </Item>
                 </Container>
-                <Item layouts=vec![ItemLayout::ItL(12)] align_self=AlignSelf::FlexStart>
+                <Item layouts=vec![ItemLayout::ItL(12)] align_self=AlignSelf::Stretch>
                     { self.view_mark_checkboxes() }
                 </Item>
             </Container>
@@ -156,11 +145,11 @@ impl GeneratorPane {
                     <p>{ "Setting" }</p>
                 })
                 body=Some(html!{
-                    <Container direction=Direction::Row wrap=Wrap::Nowrap>
-                        <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                    <Container direction=Direction::Row wrap=Wrap::Wrap>
+                        <Item layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
                             { self.view_length_bar() }
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                        <Item layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
                             { self.view_generate_button() }
                         </Item>
                     </Container>
@@ -215,33 +204,92 @@ impl GeneratorPane {
         }
     }
 
+    pub fn view_character_checkboxes_pane(&self) -> Html {
+        html! {
+            <Card
+                card_size=Size::Small
+                card_palette=Palette::Secondary
+                card_style=Style::Light
+                interaction_effect=false
+                // header=Some(html!{
+                //     <p>{ "Character" }</p>
+                // })
+                single_content=Some(html!{
+                    <Container direction=Direction::Column wrap=Wrap::Wrap>
+                        <Item layouts=vec![ItemLayout::ItM(6)] align_self=AlignSelf::Stretch>
+                            { self.view_lower_checkbox() }
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItM(6)] align_self=AlignSelf::Stretch>
+                            { self.view_upper_checkbox() }
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItM(6)] align_self=AlignSelf::Stretch>
+                            { self.view_numeric_checkbox() }
+                        </Item>
+                    </Container>
+                })
+            />
+        }
+    }
+
     pub fn view_lower_checkbox(&self) -> Html {
         let onclick = self.link.callback(|_| Msg::ToggleLower);
         html! {
-            <div>
-                <label for="lower-checkbox">{ "Lower Case" }</label>
-                <input id="lower-checkbox" type="checkbox" checked={ self.generator.use_lower } onclick=onclick/>
-            </div>
+            html! {
+                <FormGroup orientation=Orientation::Horizontal>
+                    // <div class=LOWER_CLASS>{ "abc" }</div>
+                    <FormLabel
+                      text="Lower"
+                      label_for="lower-checkbox"
+                    />
+                    <FormInput
+                        id="lower-checkbox"
+                        input_type=InputType::Checkbox
+                        input_size=Size::Medium
+                        oninput_signal=onclick
+                        checked=self.generator.use_lower
+                    />
+                </FormGroup>
+            }
         }
     }
 
     pub fn view_upper_checkbox(&self) -> Html {
         let onclick = self.link.callback(|_| Msg::ToggleUpper);
         html! {
-            <div>
-                <label for="upper-checkbox">{ "Upper Case" }</label>
-                <input id="upper-checkbox" type="checkbox" checked={ self.generator.use_upper } onclick=onclick/>
-            </div>
+            <FormGroup orientation=Orientation::Horizontal>
+                // <div class=UPPER_CLASS>{ "ABC" }</div>
+                <FormLabel
+                  text="Upper"
+                  label_for="upper-checkbox"
+                />
+                <FormInput
+                    id="upper-checkbox"
+                    input_type=InputType::Checkbox
+                    input_size=Size::Medium
+                    oninput_signal=onclick
+                    checked=self.generator.use_upper
+                />
+            </FormGroup>
         }
     }
 
     pub fn view_numeric_checkbox(&self) -> Html {
         let onclick = self.link.callback(|_| Msg::ToggleNumeric);
         html! {
-            <div>
-                <label for="numeric-checkbox">{ "Numeric" }</label>
-                <input id="numeric-checkbox" type="checkbox" checked={ self.generator.use_numeric } onclick=onclick/>
-            </div>
+            <FormGroup orientation=Orientation::Horizontal>
+                // <div class=NUMERIC_CLASS>{ "123" }</div>
+                <FormLabel
+                  text="Numeric"
+                  label_for="numeric-checkbox"
+                />
+                <FormInput
+                    id="numeric-checkbox"
+                    input_type=InputType::Checkbox
+                    input_size=Size::Medium
+                    oninput_signal=onclick
+                    checked=self.generator.use_numeric
+                />
+            </FormGroup>
         }
     }
 
