@@ -1,16 +1,12 @@
-use super::{LOWER_CLASS, NUMERIC_CLASS, UPPER_CLASS};
 use crate::password::{Password, PasswordGenerator, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH};
 use yew::prelude::*;
 use yew_styles::{
     button::Button,
     card::Card,
     forms::{
-        form_file::FormFile,
         form_group::{FormGroup, Orientation},
         form_input::{FormInput, InputType},
         form_label::FormLabel,
-        form_select::FormSelect,
-        form_textarea::FormTextArea,
     },
     layouts::{
         container::{Container, Direction, JustifyContent, Mode, Wrap},
@@ -211,9 +207,6 @@ impl GeneratorPane {
                 card_palette=Palette::Secondary
                 card_style=Style::Light
                 interaction_effect=false
-                // header=Some(html!{
-                //     <p>{ "Character" }</p>
-                // })
                 single_content=Some(html!{
                     <Container direction=Direction::Column wrap=Wrap::Wrap>
                         <Item layouts=vec![ItemLayout::ItM(6)] align_self=AlignSelf::Stretch>
@@ -236,7 +229,6 @@ impl GeneratorPane {
         html! {
             html! {
                 <FormGroup orientation=Orientation::Horizontal>
-                    // <div class=LOWER_CLASS>{ "abc" }</div>
                     <FormLabel
                       text="Lower"
                       label_for="lower-checkbox"
@@ -257,7 +249,6 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleUpper);
         html! {
             <FormGroup orientation=Orientation::Horizontal>
-                // <div class=UPPER_CLASS>{ "ABC" }</div>
                 <FormLabel
                   text="Upper"
                   label_for="upper-checkbox"
@@ -277,7 +268,6 @@ impl GeneratorPane {
         let onclick = self.link.callback(|_| Msg::ToggleNumeric);
         html! {
             <FormGroup orientation=Orientation::Horizontal>
-                // <div class=NUMERIC_CLASS>{ "123" }</div>
                 <FormLabel
                   text="Numeric"
                   label_for="numeric-checkbox"
