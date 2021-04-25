@@ -1,5 +1,6 @@
 # passgen
 simple password generator implemented by rust
+![logo](/static/passgen.svg)
 
 ## deploy
 https://hayas1.github.io/passgen/
@@ -36,16 +37,16 @@ This crate also can be compiled as CLI tools.
 
 ### usage
 #### simple generate
-`$ passgen`  
+`$ passgen`
 `odJezbxZF^siSQ0TxAvM`
 #### change length
-`$ passgen 128`  
+`$ passgen 128`
 `7V0sPmPU5hEtaE10mHA#F&YA#k#9uOmuSoASpEHPUu8TnEPW!r1INluR7k6eIc9iR^3dPzC0@b!#U8SsYsuPTXcnbfg@iLpCP@s733W0LZJmLrBH#3wvEEkh&5un2NHQ`
 #### not use lower case alphabet
-`$ passgen -l`  
+`$ passgen -l`
 `C&IECAT!EYLQWS9F9CC5`
 #### try empty available symbols
-`$ passgen -lunm`  
+`$ passgen -lunm`
 `because no available symbol, cannot generate a password`
 #### any other help
 `$ passgen -h` or `$ passgen -help`
