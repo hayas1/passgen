@@ -33,7 +33,8 @@ pub enum Msg {
     CopyPassword,
     DraggedMark(DragEvent),
     DragOverMark(DragEvent),
-    DroppedMark(DragEvent),
+    DroppedMark(DragEvent, bool),
+    ToggleAllMark(bool),
 }
 
 impl Component for GeneratorPane {
@@ -68,7 +69,14 @@ impl Component for GeneratorPane {
                 self.drag_over_mark_tag(drag_over_event);
                 return false; // do no refresh password
             }
-            Msg::DroppedMark(drop_event) => self.dropped_mark_tag(drop_event),
+            Msg::DroppedMark(drop_event, enable) => self.dropped_mark_tag(drop_event, enable),
+            Msg::ToggleAllMark(available) => {
+                if available {
+                    self.generator.mark.insert_all();
+                } else {
+                    self.generator.mark.clear()
+                }
+            }
         }
         self.refresh_password()
     }
@@ -121,27 +129,16 @@ impl GeneratorPane {
         drag_over_event.prevent_default();
     }
 
-    pub fn dropped_mark_tag(&mut self, drop_event: DragEvent) {
+    pub fn dropped_mark_tag(&mut self, drop_event: DragEvent, enable: bool) {
         let mark = drop_event
             .data_transfer()
             .expect("cannot get data_transfer")
             .get_data("mark")
             .expect("cannot get mark");
-        let target: web_sys::HtmlElement = drop_event
-            .target()
-            .expect("cannot get drop target field")
-            .dyn_into()
-            .expect("cannot cast");
-        if target.id() == "unavailable-mark"
-            || target.parent_element().expect("cannot get parent").id() == "unavailable-mark"
-        {
-            self.generator.mark.remove(&mark.chars().last().expect("invalid more than two chars"));
-        } else if target.id() == "available-mark"
-            || target.parent_element().expect("cannot get parent").id() == "available-mark"
-        {
+        if enable {
             self.generator.mark.insert(mark.chars().last().expect("invalid more than two chars"));
         } else {
-            // any other drop event such as out of field
+            self.generator.mark.remove(&mark.chars().last().expect("invalid more than two chars"));
         }
     }
 
@@ -340,29 +337,47 @@ impl GeneratorPane {
 
     pub fn view_mark_container(&self) -> Html {
         html! {
-            <Container wrap = Wrap::Wrap direction = Direction::Row>
+            <Container wrap=Wrap::Wrap direction=Direction::Row>
                 <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)]>
                     <Card
                         id="unavailable-mark"
-                        card_size=Size::Medium
+                        card_size=Size::Small
                         card_palette=Palette::Standard
                         card_style=Style::Light
                         interaction_effect=false
-                        ondrop_signal=self.link.callback(Msg::DroppedMark)
+                        ondrop_signal=self.link.callback(|e| Msg::DroppedMark(e, false))
                         ondragover_signal=self.link.callback(Msg::DragOverMark)
-                        single_content=Some(self.view_mark_tags(false))
+                        header=Some(html!{
+                            <Button
+                                id="all-unavailable-button"
+                                onclick_signal=self.link.callback(|_| Msg::ToggleAllMark(false))
+                                button_palette=Palette::Standard
+                                button_style=Style::Light
+                                button_size=Size::Medium
+                            >{ "Unavailable" }</Button>
+                        })
+                        body=Some(self.view_mark_tags(false))
                     />
                 </Item>
                 <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)]>
                     <Card
                         id="available-mark"
-                        card_size=Size::Medium
+                        card_size=Size::Small
                         card_palette=Palette::Success
                         card_style=Style::Light
                         interaction_effect=false
-                        ondrop_signal=self.link.callback(Msg::DroppedMark)
+                        ondrop_signal=self.link.callback(|e| Msg::DroppedMark(e, true))
                         ondragover_signal=self.link.callback(Msg::DragOverMark)
-                        single_content=Some(self.view_mark_tags(true))
+                        header=Some(html!{
+                            <Button
+                                id="all-available-button"
+                                onclick_signal=self.link.callback(|_| Msg::ToggleAllMark(true))
+                                button_palette=Palette::Success
+                                button_style=Style::Light
+                                button_size=Size::Medium
+                            >{ "Available" }</Button>
+                        })
+                        body=Some(self.view_mark_tags(true))
                     />
                 </Item>
             </Container>
@@ -378,6 +393,7 @@ impl GeneratorPane {
                 html! {
                     <Text
                         id=format!("tag-{}", mark as u32)
+                        class_name="draggable-tag"
                         draggable=true
                         interaction_effect=true
                         ondragstart_signal=self.link.callback(Msg::DraggedMark)
@@ -385,8 +401,8 @@ impl GeneratorPane {
                         text_size=Size::Medium
                         plain_text=mark.to_string()
                         html_text=None
-                        text_style=if available { Style::Regular } else { Style::Light }
-                        text_palette=if available { Palette::Success } else { Palette::Warning }
+                        text_style=Style::Regular
+                        text_palette=if available { Palette::Success } else { Palette::Standard }
                     />
                 }
             })

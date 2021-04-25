@@ -22,3 +22,8 @@
 .mark {
     color: aqua;
 }
+
+.draggable-tag {
+    margin: 1px;
+    display: inline-block;
+}
