@@ -1,4 +1,5 @@
 use crate::password::{Password, PasswordGenerator, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH};
+use wasm_bindgen::JsCast;
 use yew::prelude::*;
 use yew_styles::{
     button::Button,
@@ -13,6 +14,7 @@ use yew_styles::{
         item::{AlignSelf, Item, ItemLayout},
     },
     styles::{Palette, Size, Style},
+    text::{Text, TextType},
 };
 
 pub struct GeneratorPane {
@@ -29,6 +31,9 @@ pub enum Msg {
     ToggleNumeric,
     ToggleMark(char),
     CopyPassword,
+    DraggedMark(DragEvent),
+    DragOverMark(DragEvent),
+    DroppedMark(DragEvent),
 }
 
 impl Component for GeneratorPane {
@@ -55,6 +60,15 @@ impl Component for GeneratorPane {
                 self.copy_password_to_clipboard();
                 return false; // do not refresh password
             }
+            Msg::DraggedMark(drag_event) => {
+                self.dragged_mark_tag(drag_event);
+                return false; // do not refresh password
+            }
+            Msg::DragOverMark(drag_over_event) => {
+                self.drag_over_mark_tag(drag_over_event);
+                return false; // do no refresh password
+            }
+            Msg::DroppedMark(drop_event) => self.dropped_mark_tag(drop_event),
         }
         self.refresh_password()
     }
@@ -90,6 +104,47 @@ impl GeneratorPane {
         wasm_bindgen_futures::spawn_local(task);
     }
 
+    pub fn dragged_mark_tag(&mut self, drag_event: DragEvent) {
+        let target: web_sys::HtmlElement = drag_event
+            .target()
+            .expect("cannot get drag target tag")
+            .dyn_into()
+            .expect("cannot cast");
+        drag_event
+            .data_transfer()
+            .expect("cannot get data_transfer")
+            .set_data("mark", &target.text_content().expect("not contain text"))
+            .expect("cannot set mark");
+    }
+
+    pub fn drag_over_mark_tag(&mut self, drag_over_event: DragEvent) {
+        drag_over_event.prevent_default();
+    }
+
+    pub fn dropped_mark_tag(&mut self, drop_event: DragEvent) {
+        let mark = drop_event
+            .data_transfer()
+            .expect("cannot get data_transfer")
+            .get_data("mark")
+            .expect("cannot get mark");
+        let target: web_sys::HtmlElement = drop_event
+            .target()
+            .expect("cannot get drop target field")
+            .dyn_into()
+            .expect("cannot cast");
+        if target.id() == "unavailable-mark"
+            || target.parent_element().expect("cannot get parent").id() == "unavailable-mark"
+        {
+            self.generator.mark.remove(&mark.chars().last().expect("invalid more than two chars"));
+        } else if target.id() == "available-mark"
+            || target.parent_element().expect("cannot get parent").id() == "available-mark"
+        {
+            self.generator.mark.insert(mark.chars().last().expect("invalid more than two chars"));
+        } else {
+            // any other drop event such as out of field
+        }
+    }
+
     pub fn view_main(&self) -> Html {
         html! {
             <Container direction=Direction::Column wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode)>
@@ -105,7 +160,7 @@ impl GeneratorPane {
                     </Item>
                 </Container>
                 <Item layouts=vec![ItemLayout::ItL(12)] align_self=AlignSelf::Stretch>
-                    { self.view_mark_checkboxes() }
+                    { self.view_mark_container() }
                 </Item>
             </Container>
         }
@@ -283,24 +338,58 @@ impl GeneratorPane {
         }
     }
 
-    pub fn view_mark_checkboxes(&self) -> Html {
-        let checkboxes = self.generator.mark.get_marks().map(|(c, checked)| {
-            let onchange = self.link.callback(move |_| Msg::ToggleMark(c));
-            let id = format!("mark{}-checkbox", c as u32);
-            html! {
-                <li>
-                    <input id=id type="checkbox" checked=checked onchange=onchange/>
-                    <label for=id>{ c }</label>
-                </li>
-            }
-        });
+    pub fn view_mark_container(&self) -> Html {
         html! {
-            <div>
-                <p>{ "Mark" }</p>
-                <ul>
-                    { checkboxes.collect::<Html>() }
-                </ul>
-            </div>
+            <Container wrap = Wrap::Wrap direction = Direction::Row>
+                <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)]>
+                    <Card
+                        id="unavailable-mark"
+                        card_size=Size::Medium
+                        card_palette=Palette::Standard
+                        card_style=Style::Light
+                        interaction_effect=false
+                        ondrop_signal=self.link.callback(Msg::DroppedMark)
+                        ondragover_signal=self.link.callback(Msg::DragOverMark)
+                        single_content=Some(self.view_mark_tags(false))
+                    />
+                </Item>
+                <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)]>
+                    <Card
+                        id="available-mark"
+                        card_size=Size::Medium
+                        card_palette=Palette::Success
+                        card_style=Style::Light
+                        interaction_effect=false
+                        ondrop_signal=self.link.callback(Msg::DroppedMark)
+                        ondragover_signal=self.link.callback(Msg::DragOverMark)
+                        single_content=Some(self.view_mark_tags(true))
+                    />
+                </Item>
+            </Container>
         }
+    }
+
+    pub fn view_mark_tags(&self, selected: bool) -> Html {
+        self.generator
+            .mark
+            .get_marks()
+            .filter(|&(_, available)| available == selected)
+            .map(|(mark, available)| {
+                html! {
+                    <Text
+                        id=format!("tag-{}", mark as u32)
+                        draggable=true
+                        interaction_effect=true
+                        ondragstart_signal=self.link.callback(Msg::DraggedMark)
+                        text_type=TextType::Tag
+                        text_size=Size::Medium
+                        plain_text=mark.to_string()
+                        html_text=None
+                        text_style=if available { Style::Regular } else { Style::Light }
+                        text_palette=if available { Palette::Success } else { Palette::Warning }
+                    />
+                }
+            })
+            .collect()
     }
 }
