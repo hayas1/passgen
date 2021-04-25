@@ -58,7 +58,7 @@ impl Component for Header {
                 navbar_style=Style::Light
                 fixed=Fixed::None
                 branch=html!{
-                    <img src="/passgen.svg"/>
+                    <img src="passgen.png"/>
                 }
             >
                 <NavbarContainer justify_content=JustifyContent::FlexStart(Mode::NoMode)>
