@@ -38,6 +38,7 @@ impl MarkSet {
         Self::CANDIDATE_MARK.chars().map(move |c| (c, self.contains(&c)))
     }
 
+    /// get iterator of this set
     pub fn iter(&self) -> std::collections::hash_set::Iter<'_, char> {
         self.mark.iter()
     }
@@ -57,6 +58,11 @@ impl MarkSet {
         } else {
             false
         }
+    }
+
+    /// all mark contains in this set
+    pub fn insert_all(&mut self) {
+        self.mark.extend(Self::CANDIDATE_MARK_SET.clone())
     }
 
     /// if mark is contained, remove it

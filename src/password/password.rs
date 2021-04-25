@@ -49,8 +49,8 @@ impl Password {
         self.len
     }
 
-    /// security reason, this method is private, but this might be public
-    fn to_string(&self) -> String {
+    /// if return &str, we have to do some allocations, so there is no choice but to return String
+    pub fn to_string(&self) -> String {
         self.password.iter().take(self.len()).collect()
     }
 

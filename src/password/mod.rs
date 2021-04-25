@@ -2,6 +2,10 @@ pub mod generator;
 pub mod password;
 pub mod symbol;
 
+pub use generator::*;
+pub use password::*;
+pub use symbol::*;
+
 use thiserror;
 
 /// min length of password is 8 for convenience

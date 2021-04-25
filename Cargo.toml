@@ -17,12 +17,13 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 yew = "0.17"
 wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
 rand = { version = "0.7", features = ["wasm-bindgen"] } # latest 2021-04 is 0.8, but it cannot use wasm-bindgen
 itertools = "0.10"
 anyhow = "1.0"
 thiserror = "1.0"
 once_cell = "1.7"
 clap = "2.33"
-web-sys = "0.3"
-yew_styles = { version="0.9", features=["layouts", "button", "navbar", "forms", "card",
-                                        "modal", "text", "dropdown", "spinner", "carousel"] }
+web-sys = { version = "0.3", features = ["Navigator", "Clipboard"]}
+yew_styles = { version = "0.9", features = ["layouts", "button", "navbar", "forms", "card",
+                                            "modal", "text", "dropdown", "spinner", "carousel"] }
