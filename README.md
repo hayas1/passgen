@@ -1,6 +1,6 @@
 # passgen
 simple password generator implemented by rust
-![logo](/static/passgen.svg)
+![logo](/static/passgen.png)
 
 ## deploy
 https://hayas1.github.io/passgen/
