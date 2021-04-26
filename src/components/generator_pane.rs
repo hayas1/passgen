@@ -397,6 +397,7 @@ impl GeneratorPane {
                         draggable=true
                         interaction_effect=true
                         ondragstart_signal=self.link.callback(Msg::DraggedMark)
+                        onclick_signal=self.link.callback(move |_| Msg::ToggleMark(mark))
                         text_type=TextType::Tag
                         text_size=Size::Medium
                         plain_text=mark.to_string()
