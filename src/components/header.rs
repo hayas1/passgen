@@ -136,22 +136,14 @@ impl Header {
                         </div>
                     })
                 />
-                <h3>{ "How" }</h3>
+                <h3>{ "Warning" }</h3>
                     <Text
                         text_type=TextType::Paragraph
                         text_size=Size::Medium
                         html_text=Some(html!{
                             <div>
-                                { "Generator is implemented by " }
-                                <a href="https://www.rust-lang.org/">{ "Rust" }</a>
-                                { " so compiled into " }
-                                <a href="https://webassembly.org/">{ "Wasm" }</a>
-                                { ". " }
-                                { "Used framework is " }
-                                <a href="https://yew.rs/docs/">{ "Yew" }</a>
-                                { " and use " }
-                                <a href="https://yewstyles.spielrs.tech/">{ "Yew Styles" }</a>
-                                { " for style." }
+                                { "This page was created for practicing Rust. " }
+                                { "As such, we cannot guarantee its safety." }
                             </div>
                         })
                     />
