@@ -145,14 +145,14 @@ impl GeneratorPane {
     pub fn view_main(&self) -> Html {
         html! {
             <Container direction=Direction::Column wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode)>
-                <Item class_name="stretch-card" layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Center>
+                <Item layouts=vec![ItemLayout::ItXs(12)]>
                     { self.view_generated_password() }
                 </Item>
-                <Container direction=Direction::Row wrap=Wrap::Nowrap>
-                    <Item layouts=vec![ItemLayout::ItL(8)] align_self=AlignSelf::FlexStart>
+                <Container direction=Direction::Row wrap=Wrap::Wrap>
+                    <Item layouts=vec![ItemLayout::ItXs(7)]>
                         { self.view_length_bar_button_pane() }
                     </Item>
-                    <Item class_name="stretch-card"  layouts=vec![ItemLayout::ItL(4)] align_self=AlignSelf::FlexEnd>
+                    <Item layouts=vec![ItemLayout::ItXs(5)]>
                         { self.view_character_checkboxes_pane() }
                     </Item>
                 </Container>
@@ -194,10 +194,10 @@ impl GeneratorPane {
                 })
                 body=Some(html!{
                     <Container direction=Direction::Row wrap=Wrap::Wrap>
-                        <Item layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                        <Item layouts=vec![ItemLayout::ItM(8), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
                             { self.view_length_bar() }
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                        <Item layouts=vec![ItemLayout::ItM(4), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
                             { self.view_generate_button() }
                         </Item>
                     </Container>
