@@ -13,7 +13,7 @@ This page can generate random password such as `Z914f&P@Fupdj5RLMsmy`.
 - [x] use upper case
 - [x] use numeric
 - [x] use some mark symbols
-- [ ] use custom characters
+- [x] use custom characters
 
 ### feature
 Since this is implemented by [Rust](https://github.com/rust-lang/rust),

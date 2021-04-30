@@ -79,6 +79,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly run_app: () => void;
+  readonly __wbgt_should_create_dropdown_item_27: (a: number) => void;
   readonly __wbgt_should_set_style_prop_36: (a: number) => void;
   readonly __wbgt_should_generate_random_string_37: (a: number) => void;
   readonly __wbgt_should_create_carousel_dot_component_7: (a: number) => void;
@@ -116,7 +117,6 @@ export interface InitOutput {
   readonly __wbgt_should_submit_the_form_12: (a: number) => void;
   readonly __wbgt_should_create_form_submit_19: (a: number) => void;
   readonly __wbgt_should_create_navbar_dropdown_container_26: (a: number) => void;
-  readonly __wbgt_should_create_dropdown_item_27: (a: number) => void;
   readonly __wbg_wasmbindgentestcontext_free: (a: number) => void;
   readonly wasmbindgentestcontext_new: () => number;
   readonly wasmbindgentestcontext_args: (a: number, b: number, c: number) => void;
@@ -129,13 +129,13 @@ export interface InitOutput {
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_export_2: WebAssembly.Table;
-  readonly _dyn_core__ops__function__FnMut___A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hf2d76668a219091c: (a: number, b: number, c: number) => void;
-  readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__he01031ac25a1844f: (a: number, b: number, c: number) => void;
+  readonly _dyn_core__ops__function__FnMut___A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hfdabe463bde0958f: (a: number, b: number, c: number) => void;
+  readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h005f7aa706589d2e: (a: number, b: number, c: number) => void;
   readonly __wbindgen_exn_store: (a: number) => void;
-  readonly wasm_bindgen__convert__closures__invoke0_mut__h76abdf846b2875ca: (a: number, b: number) => void;
+  readonly wasm_bindgen__convert__closures__invoke0_mut__h355005533537ad0b: (a: number, b: number) => void;
   readonly __wbindgen_free: (a: number, b: number) => void;
-  readonly wasm_bindgen__convert__closures__invoke3_mut__h436b6d968c2c616e: (a: number, b: number, c: number, d: number, e: number) => void;
-  readonly wasm_bindgen__convert__closures__invoke2_mut__h7de2f46c0a06fb4d: (a: number, b: number, c: number, d: number) => void;
+  readonly wasm_bindgen__convert__closures__invoke3_mut__h291588f8e81fd715: (a: number, b: number, c: number, d: number, e: number) => void;
+  readonly wasm_bindgen__convert__closures__invoke2_mut__h8f41fb3ee84965ab: (a: number, b: number, c: number, d: number) => void;
   readonly __wbindgen_start: () => void;
 }
 
