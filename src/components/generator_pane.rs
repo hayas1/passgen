@@ -147,7 +147,7 @@ impl GeneratorPane {
     pub fn view_main(&self) -> Html {
         html! {
             <Container direction=Direction::Column wrap=Wrap::Wrap justify_content=JustifyContent::Center(Mode::NoMode)>
-                <Item layouts=vec![ItemLayout::ItXs(12)]>
+                <Item class_name="fix-width" layouts=vec![ItemLayout::ItXs(12)]>
                     { self.view_generated_password() }
                 </Item>
                 <Container direction=Direction::Row wrap=Wrap::Wrap>
