@@ -35,6 +35,7 @@ pub enum Msg {
     DragOverMark(DragEvent),
     DroppedMark(DragEvent, bool),
     ToggleAllMark(bool),
+    InputAddition(String),
 }
 
 impl Component for GeneratorPane {
@@ -77,6 +78,7 @@ impl Component for GeneratorPane {
                     self.generator.mark.clear()
                 }
             }
+            Msg::InputAddition(addition) => self.generator.addition = addition.chars().collect(),
         }
         self.refresh_password()
     }
@@ -150,7 +152,7 @@ impl GeneratorPane {
                 </Item>
                 <Container direction=Direction::Row wrap=Wrap::Wrap>
                     <Item layouts=vec![ItemLayout::ItXs(7)]>
-                        { self.view_length_bar_button_pane() }
+                        { self.view_setting_pane() }
                     </Item>
                     <Item layouts=vec![ItemLayout::ItXs(5)]>
                         { self.view_character_checkboxes_pane() }
@@ -182,27 +184,67 @@ impl GeneratorPane {
         }
     }
 
-    pub fn view_length_bar_button_pane(&self) -> Html {
+    pub fn view_generate_button(&self) -> Html {
+        match self.generator.can_generate() {
+            Ok(()) => html! {
+                <Button
+                    id="generate-button"
+                    onclick_signal=self.link.callback(|_| Msg::Generate)
+                    button_palette=Palette::Success
+                    button_style=Style::Light
+                    button_size=Size::Small
+                >{ "Generate Password!" }</Button>
+            },
+            Err(_) => html! {
+                <Button
+                    id="generate-button"
+                    onclick_signal=self.link.callback(|_| Msg::Generate)
+                    button_palette=Palette::Warning
+                    button_style=Style::Light
+                    button_size=Size::Small
+                >{ "Unavailable!" }</Button>
+            },
+        }
+    }
+
+    pub fn view_setting_pane(&self) -> Html {
         html! {
             <Card
                 card_size=Size::Small
                 card_palette=Palette::Primary
                 card_style=Style::Light
                 interaction_effect=false
-                header=Some(html!{
-                    <p>{ "Setting" }</p>
-                })
-                body=Some(html!{
-                    <Container direction=Direction::Row wrap=Wrap::Wrap>
-                        <Item layouts=vec![ItemLayout::ItM(8), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                single_content=Some(html!{
+                    <Container direction=Direction::Column wrap=Wrap::Wrap>
+                        <Item layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::FlexEnd>
+                            { self.view_generate_button() }
+                        </Item>
+                        <Item layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
                             { self.view_length_bar() }
                         </Item>
-                        <Item layouts=vec![ItemLayout::ItM(4), ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
-                            { self.view_generate_button() }
+                        <Item layouts=vec![ItemLayout::ItXs(12)] align_self=AlignSelf::Stretch>
+                            { self.view_addition_form() }
                         </Item>
                     </Container>
                 })
             />
+        }
+    }
+
+    pub fn view_addition_form(&self) -> Html {
+        html! {
+            <FormGroup orientation=Orientation::Horizontal>
+                <FormLabel
+                    text="Addition"
+                    label_for="addition-form"
+                />
+                <FormInput
+                    id="addition-form"
+                    input_type=InputType::Text
+                    input_size=Size::Medium
+                    oninput_signal=self.link.callback(|d: InputData| Msg::InputAddition(d.value))
+                />
+            </FormGroup>
         }
     }
 
@@ -226,29 +268,6 @@ impl GeneratorPane {
                   label_for="password-length"
                 />
             </FormGroup>
-        }
-    }
-
-    pub fn view_generate_button(&self) -> Html {
-        match self.generator.can_generate() {
-            Ok(()) => html! {
-                <Button
-                    id="generate-button"
-                    onclick_signal=self.link.callback(|_| Msg::Generate)
-                    button_palette=Palette::Success
-                    button_style=Style::Light
-                    button_size=Size::Small
-                >{ "Generate!" }</Button>
-            },
-            Err(_) => html! {
-                <Button
-                    id="generate-button"
-                    onclick_signal=self.link.callback(|_| Msg::Generate)
-                    button_palette=Palette::Warning
-                    button_style=Style::Light
-                    button_size=Size::Small
-                >{ "Unavailable!" }</Button>
-            },
         }
     }
 
@@ -279,21 +298,19 @@ impl GeneratorPane {
     pub fn view_lower_checkbox(&self) -> Html {
         let onclick = self.link.callback(|_| Msg::ToggleLower);
         html! {
-            html! {
-                <FormGroup orientation=Orientation::Horizontal>
-                    <FormLabel
-                      text="Lower"
-                      label_for="lower-checkbox"
-                    />
-                    <FormInput
-                        id="lower-checkbox"
-                        input_type=InputType::Checkbox
-                        input_size=Size::Medium
-                        oninput_signal=onclick
-                        checked=self.generator.use_lower
-                    />
-                </FormGroup>
-            }
+            <FormGroup orientation=Orientation::Horizontal>
+                <FormLabel
+                    text="Lower"
+                    label_for="lower-checkbox"
+                />
+                <FormInput
+                    id="lower-checkbox"
+                    input_type=InputType::Checkbox
+                    input_size=Size::Medium
+                    oninput_signal=onclick
+                    checked=self.generator.use_lower
+                />
+            </FormGroup>
         }
     }
 
