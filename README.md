@@ -7,6 +7,11 @@ https://hayas1.github.io/passgen/
 
 This page can generate random password such as `Z914f&P@Fupdj5RLMsmy`.
 
+### PWA
+This application support Progressive Web Apps (PWA).
+So, if you use iOS, you can add this application to home screen with `Add to Home Screen` button.
+Or, in windows, you may use this application as desktop application, with browser.
+The same is probably true for Android and MacOS.
 ### available
 - [x] password length from 8 to 128
 - [x] use lower case
