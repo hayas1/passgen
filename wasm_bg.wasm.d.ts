@@ -2,7 +2,6 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function run_app(): void;
-export function __wbgt_should_create_dropdown_item_27(a: number): void;
 export function __wbgt_should_set_style_prop_36(a: number): void;
 export function __wbgt_should_generate_random_string_37(a: number): void;
 export function __wbgt_should_create_carousel_dot_component_7(a: number): void;
@@ -40,6 +39,7 @@ export function __wbgt_should_create_form_component_11(a: number): void;
 export function __wbgt_should_submit_the_form_12(a: number): void;
 export function __wbgt_should_create_form_submit_19(a: number): void;
 export function __wbgt_should_create_navbar_dropdown_container_26(a: number): void;
+export function __wbgt_should_create_dropdown_item_27(a: number): void;
 export function __wbg_wasmbindgentestcontext_free(a: number): void;
 export function wasmbindgentestcontext_new(): number;
 export function wasmbindgentestcontext_args(a: number, b: number, c: number): void;
@@ -52,7 +52,7 @@ export function __wbgtest_console_error(a: number): void;
 export function __wbindgen_malloc(a: number): number;
 export function __wbindgen_realloc(a: number, b: number, c: number): number;
 export const __wbindgen_export_2: WebAssembly.Table;
-export function _dyn_core__ops__function__FnMut___A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hfdabe463bde0958f(a: number, b: number, c: number): void;
+export function _dyn_core__ops__function__FnMut___A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h6c62b39055f6f03d(a: number, b: number, c: number): void;
 export function _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h005f7aa706589d2e(a: number, b: number, c: number): void;
 export function __wbindgen_exn_store(a: number): void;
 export function wasm_bindgen__convert__closures__invoke0_mut__h355005533537ad0b(a: number, b: number): void;
