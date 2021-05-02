@@ -357,27 +357,6 @@ impl GeneratorPane {
             <Container wrap=Wrap::Wrap direction=Direction::Row>
                 <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)]>
                     <Card
-                        id="unavailable-mark"
-                        card_size=Size::Small
-                        card_palette=Palette::Standard
-                        card_style=Style::Light
-                        interaction_effect=false
-                        ondrop_signal=self.link.callback(|e| Msg::DroppedMark(e, false))
-                        ondragover_signal=self.link.callback(Msg::DragOverMark)
-                        header=Some(html!{
-                            <Button
-                                id="all-unavailable-button"
-                                onclick_signal=self.link.callback(|_| Msg::ToggleAllMark(false))
-                                button_palette=Palette::Standard
-                                button_style=Style::Light
-                                button_size=Size::Medium
-                            >{ "Unavailable" }</Button>
-                        })
-                        body=Some(self.view_mark_tags(false))
-                    />
-                </Item>
-                <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)]>
-                    <Card
                         id="available-mark"
                         card_size=Size::Small
                         card_palette=Palette::Success
@@ -395,6 +374,27 @@ impl GeneratorPane {
                             >{ "Available" }</Button>
                         })
                         body=Some(self.view_mark_tags(true))
+                    />
+                </Item>
+                <Item layouts=vec![ItemLayout::ItM(6), ItemLayout::ItXs(12)]>
+                    <Card
+                        id="unavailable-mark"
+                        card_size=Size::Small
+                        card_palette=Palette::Standard
+                        card_style=Style::Light
+                        interaction_effect=false
+                        ondrop_signal=self.link.callback(|e| Msg::DroppedMark(e, false))
+                        ondragover_signal=self.link.callback(Msg::DragOverMark)
+                        header=Some(html!{
+                            <Button
+                                id="all-unavailable-button"
+                                onclick_signal=self.link.callback(|_| Msg::ToggleAllMark(false))
+                                button_palette=Palette::Standard
+                                button_style=Style::Light
+                                button_size=Size::Medium
+                            >{ "Unavailable" }</Button>
+                        })
+                        body=Some(self.view_mark_tags(false))
                     />
                 </Item>
             </Container>
