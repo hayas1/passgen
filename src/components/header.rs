@@ -58,12 +58,12 @@ impl Component for Header {
                 navbar_style=Style::Light
                 fixed=Fixed::None
                 branch=html!{
-                    <img src="passgen.png"/>
+                    <a href=""><img src="passgen.png"/></a>
                 }
             >
                 <NavbarContainer justify_content=JustifyContent::FlexStart(Mode::NoMode)>
                     <NavbarItem active=true>
-                        <a href="" style="text-decoration:none">{ "Home" }</a>
+                        <a href="" style="text-decoration: none">{ "Home" }</a>
                     </NavbarItem>
                     <NavbarItem onclick_signal=self.link.callback(|_| Msg::Repository)>
                         <span>{ "Repository" }</span>
