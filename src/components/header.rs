@@ -63,7 +63,7 @@ impl Component for Header {
             >
                 <NavbarContainer justify_content=JustifyContent::FlexStart(Mode::NoMode)>
                     <NavbarItem active=true>
-                        <span>{ "Home" }</span>
+                        <a href="" style="text-decoration:none">{ "Home" }</a>
                     </NavbarItem>
                     <NavbarItem onclick_signal=self.link.callback(|_| Msg::Repository)>
                         <span>{ "Repository" }</span>
