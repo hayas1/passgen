@@ -1,5 +1,5 @@
 # passgen
-simple password generator implemented by rust
+simple password generator implemented by (almost) rust only
 ![logo](/static/passgen.png)
 
 ## deploy
